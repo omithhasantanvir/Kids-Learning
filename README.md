@@ -9,6 +9,7 @@ An all-in-one, browser-based **YouTube Shorts & TikTok Video Generator** designe
 - **🎯 10+ Interactive Learning Categories:**
   - 🚩 **Country Flags:** Procedural vector flag engine supporting all 195+ world countries (Nordic crosses, tricolors, serrated flags, stars, crescents, cantons) + Explorer with regional presets and autocomplete search.
   - 🧍 **Human Body Parts (3D Anatomy):** Dual-view (Front / Back) full anatomy model with targeted pulse markers and labels.
+  - 🐟 **Fish & Sea Creatures:** High-definition vector graphics and guessing quiz for Goldfish, Clownfish, Shark, Dolphin, Pufferfish, Blue Tang, Catfish, and marine life.
   - 🦁 **Animals & Birds:** Rich procedural graphics for domestic & wild animals.
   - 🍎 **Fruits & Vegetables:** Colorful, child-friendly illustrations.
   - 🌸 **Flowers, Vehicles, Shapes & Colors:** Engaging visual quizzes.

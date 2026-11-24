@@ -233,7 +233,7 @@
       color: var(--text-main);
     }
 
-    
+
     .flag-chip {
       background: var(--surface2);
       border: 1px solid var(--border);
@@ -248,6 +248,7 @@
       transition: all 0.15s ease;
       color: var(--text);
     }
+
     .flag-chip .remove-chip {
       display: inline-flex;
       align-items: center;
@@ -262,6 +263,7 @@
       cursor: pointer;
       transition: background 0.15s;
     }
+
     .flag-chip .remove-chip:hover {
       background: #ef4444;
       color: #ffffff;
@@ -581,6 +583,7 @@
               <option value="fruits">🍎 Fruits</option>
               <option value="animals">🐘 Animals</option>
               <option value="birds">🦜 Birds</option>
+              <option value="fish">🐟 Fish</option>
             </select>
           </div>
           <div class="field">
@@ -620,8 +623,10 @@
           <div class="field">
             <label for="countrySearchInput">Add Any Country (Search or Pick)</label>
             <div style="display:flex; gap:6px;">
-              <input type="text" id="countrySearchInput" list="allCountriesDataList" placeholder="e.g. Bahrain, Kenya, Denmark..." style="flex:1;" />
-              <button type="button" id="addCountryBtn" class="btn btn-secondary" style="padding:6px 12px; font-size:13px; white-space:nowrap;">➕ Add</button>
+              <input type="text" id="countrySearchInput" list="allCountriesDataList"
+                placeholder="e.g. Bahrain, Kenya, Denmark..." style="flex:1;" />
+              <button type="button" id="addCountryBtn" class="btn btn-secondary"
+                style="padding:6px 12px; font-size:13px; white-space:nowrap;">➕ Add</button>
             </div>
             <datalist id="allCountriesDataList"></datalist>
           </div>
@@ -629,7 +634,8 @@
         <div class="field" style="margin-top:2px;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
             <label style="margin:0;">Active Countries in Video (click ✕ to remove):</label>
-            <button type="button" id="clearAllFlagsBtn" class="btn btn-secondary" style="padding:2px 8px; font-size:11px;">Clear All</button>
+            <button type="button" id="clearAllFlagsBtn" class="btn btn-secondary"
+              style="padding:2px 8px; font-size:11px;">Clear All</button>
           </div>
           <div id="flagChipsContainer" class="chip-group" style="max-height:140px; overflow-y:auto; padding:4px;"></div>
         </div>
@@ -996,6 +1002,23 @@
           defaultLeft: 'Parrot, Eagle, Peacock, Flamingo, Owl',
           defaultRight: 'Parrot, Eagle, Peacock, Flamingo, Owl',
           hint: '🦜 Built-in colorful bird visuals included — or upload your own bird photos!'
+        },
+        fish: {
+          label: 'Fish',
+          icon: '🐟',
+          layout: 'quiz',
+          introText: 'Guess the Fish! 🐟',
+          hookSpeech: 'Can you guess these amazing fish?',
+          questionText: 'Which fish is this? 🐟',
+          revealDelay: 3,
+          secPerMatch: 5.0,
+          bgColor: '#f0f9ff',
+          lineColor: '#0284c7',
+          musicTrack: 'quiz',
+          musicTiming: 'guessOnly',
+          defaultLeft: 'Goldfish, Clownfish, Shark, Dolphin, Pufferfish',
+          defaultRight: 'Goldfish, Clownfish, Shark, Dolphin, Pufferfish',
+          hint: '🐟 Built-in colorful fish visuals & vector graphics included — or upload your own fish photos!'
         }
       };
 
@@ -1020,7 +1043,17 @@
         parrot: '🦜', eagle: '🦅', peacock: '🦚', flamingo: '🦩', owl: '🦉',
         duck: '🦆', swan: '🦢', penguin: '🐧', rooster: '🐓', chicken: '🐔',
         dove: '🕊️', pigeon: '🕊️', turkey: '🦃', goose: '🪿', crow: '🐦‍⬛',
-        chick: '🐥', bird: '🐦', sparrow: '🐦'
+        chick: '🐥', bird: '🐦', sparrow: '🐦',
+        // Fish & Marine Life
+        fish: '🐟', goldfish: '🐠', clownfish: '🐠', shark: '🦈', dolphin: '🐬',
+        whale: '🐳', 'killer whale': '🐋', orca: '🐋', pufferfish: '🐡', blowfish: '🐡',
+        salmon: '🐟', tuna: '🐟', betta: '🐠', guppy: '🐠', catfish: '🐟', piranha: '🐟',
+        octopus: '🐙', squid: '🦑', crab: '🦀', lobster: '🦞', shrimp: '🦐', starfish: '⭐',
+        seahorse: '🐠', jellyfish: '🪼', eel: '🐍', seal: '🦭', swordfish: '🐟',
+        carp: '🐟', tilapia: '🐟', rohu: '🐟', ilish: '🐟', hilsha: '🐟',
+        'blue tang': '🐠', ray: '🐟', manta: '🐟', stingray: '🐟', trout: '🐟',
+        bass: '🐟', cod: '🐟', mackerel: '🐟', sardine: '🐟', anchovy: '🐟',
+        nemo: '🐠', dory: '🐠', 'flying fish': '🐟', anglerfish: '🐟'
       };
 
       /* ==========================================================================
@@ -1043,632 +1076,1021 @@
       }
 
       function drawVectorFlag(c, name, x, y, w, h) {
-  if (!name) return false;
-  const key = name.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
-  c.save();
-  roundRectPath(c, x, y, w, h, 18);
-  c.clip();
+        if (!name) return false;
+        const key = name.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+        c.save();
+        roundRectPath(c, x, y, w, h, 18);
+        c.clip();
 
-  let matched = true;
+        let matched = true;
 
-  // 1. Horizontal Stripes Helpers
-  const hStripes = (colors) => {
-    const sh = h / colors.length;
-    colors.forEach((col, i) => {
-      c.fillStyle = col;
-      c.fillRect(x, y + i * sh, w, sh + 1);
-    });
-  };
+        // 1. Horizontal Stripes Helpers
+        const hStripes = (colors) => {
+          const sh = h / colors.length;
+          colors.forEach((col, i) => {
+            c.fillStyle = col;
+            c.fillRect(x, y + i * sh, w, sh + 1);
+          });
+        };
 
-  // 2. Vertical Stripes Helpers
-  const vStripes = (colors) => {
-    const sw = w / colors.length;
-    colors.forEach((col, i) => {
-      c.fillStyle = col;
-      c.fillRect(x + i * sw, y, sw + 1, h);
-    });
-  };
+        // 2. Vertical Stripes Helpers
+        const vStripes = (colors) => {
+          const sw = w / colors.length;
+          colors.forEach((col, i) => {
+            c.fillStyle = col;
+            c.fillRect(x + i * sw, y, sw + 1, h);
+          });
+        };
 
-  // 3. Nordic Cross Helper
-  const drawNordic = (bgCol, crossCol, outCol) => {
-    c.fillStyle = bgCol; c.fillRect(x, y, w, h);
-    const vx = x + w * 0.35, hy = y + h * 0.5;
-    if (outCol) {
-      c.fillStyle = outCol;
-      c.fillRect(vx - w * 0.1, y, w * 0.2, h);
-      c.fillRect(x, hy - h * 0.14, w, h * 0.28);
-    }
-    c.fillStyle = crossCol;
-    c.fillRect(vx - w * 0.05, y, w * 0.1, h);
-    c.fillRect(x, hy - h * 0.07, w, h * 0.14);
-  };
+        // 3. Nordic Cross Helper
+        const drawNordic = (bgCol, crossCol, outCol) => {
+          c.fillStyle = bgCol; c.fillRect(x, y, w, h);
+          const vx = x + w * 0.35, hy = y + h * 0.5;
+          if (outCol) {
+            c.fillStyle = outCol;
+            c.fillRect(vx - w * 0.1, y, w * 0.2, h);
+            c.fillRect(x, hy - h * 0.14, w, h * 0.28);
+          }
+          c.fillStyle = crossCol;
+          c.fillRect(vx - w * 0.05, y, w * 0.1, h);
+          c.fillRect(x, hy - h * 0.07, w, h * 0.14);
+        };
 
-  // 4. Serrated Flag Helper (Bahrain, Qatar)
-  const drawSerrated = (flyCol, hoistCol, teethCount) => {
-    c.fillStyle = flyCol; c.fillRect(x, y, w, h);
-    const hoistW = w * 0.25;
-    const toothW = w * 0.12;
-    c.fillStyle = hoistCol;
-    c.beginPath();
-    c.moveTo(x, y);
-    c.lineTo(x + hoistW, y);
-    const th = h / teethCount;
-    for (let i = 0; i < teethCount; i++) {
-      const ty0 = y + i * th;
-      const tMid = ty0 + th / 2;
-      const ty1 = ty0 + th;
-      c.lineTo(x + hoistW + toothW, tMid);
-      c.lineTo(x + hoistW, ty1);
-    }
-    c.lineTo(x, y + h);
-    c.closePath();
-    c.fill();
-  };
+        // 4. Serrated Flag Helper (Bahrain, Qatar)
+        const drawSerrated = (flyCol, hoistCol, teethCount) => {
+          c.fillStyle = flyCol; c.fillRect(x, y, w, h);
+          const hoistW = w * 0.25;
+          const toothW = w * 0.12;
+          c.fillStyle = hoistCol;
+          c.beginPath();
+          c.moveTo(x, y);
+          c.lineTo(x + hoistW, y);
+          const th = h / teethCount;
+          for (let i = 0; i < teethCount; i++) {
+            const ty0 = y + i * th;
+            const tMid = ty0 + th / 2;
+            const ty1 = ty0 + th;
+            c.lineTo(x + hoistW + toothW, tMid);
+            c.lineTo(x + hoistW, ty1);
+          }
+          c.lineTo(x, y + h);
+          c.closePath();
+          c.fill();
+        };
 
-  // 5. Hoist Triangle Helper
-  const drawHoistTri = (triCol, triW = 0.4) => {
-    c.fillStyle = triCol;
-    c.beginPath();
-    c.moveTo(x, y);
-    c.lineTo(x + w * triW, y + h / 2);
-    c.lineTo(x, y + h);
-    c.closePath();
-    c.fill();
-  };
+        // 5. Hoist Triangle Helper
+        const drawHoistTri = (triCol, triW = 0.4) => {
+          c.fillStyle = triCol;
+          c.beginPath();
+          c.moveTo(x, y);
+          c.lineTo(x + w * triW, y + h / 2);
+          c.lineTo(x, y + h);
+          c.closePath();
+          c.fill();
+        };
 
-  // --- COUNTRY MATCHES ---
-  // Bahrain
-  if (key === 'bahrain' || key === 'bh') {
-    drawSerrated('#CE1126', '#ffffff', 5);
-  }
-  // Qatar
-  else if (key === 'qatar' || key === 'qa') {
-    drawSerrated('#8D1B3D', '#ffffff', 9);
-  }
-  // Denmark
-  else if (key === 'denmark' || key === 'dk') {
-    drawNordic('#C60C30', '#ffffff');
-  }
-  // Sweden
-  else if (key === 'sweden' || key === 'se') {
-    drawNordic('#006AA7', '#FECC00');
-  }
-  // Norway
-  else if (key === 'norway' || key === 'no') {
-    drawNordic('#BA0C2F', '#00205B', '#ffffff');
-  }
-  // Finland
-  else if (key === 'finland' || key === 'fi') {
-    drawNordic('#ffffff', '#002F6C');
-  }
-  // Iceland
-  else if (key === 'iceland' || key === 'is') {
-    drawNordic('#02529C', '#DC1E35', '#ffffff');
-  }
-  // Georgia
-  else if (key === 'georgia' || key === 'ge') {
-    c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h);
-    // Large red cross
-    c.fillStyle = '#FF0000';
-    c.fillRect(x + w * 0.42, y, w * 0.16, h);
-    c.fillRect(x, y + h * 0.38, w, h * 0.24);
-    // 4 small red Bolnur-Katskhuri crosses
-    const qx = [0.21, 0.79, 0.21, 0.79], qy = [0.19, 0.19, 0.81, 0.81];
-    for (let k = 0; k < 4; k++) {
-      const cx = x + w * qx[k], cy = y + h * qy[k], cs = h * 0.08;
-      c.fillStyle = '#FF0000';
-      c.fillRect(cx - cs * 0.3, cy - cs, cs * 0.6, cs * 2);
-      c.fillRect(cx - cs, cy - cs * 0.3, cs * 2, cs * 0.6);
-    }
-  }
-  // Kenya
-  else if (key === 'kenya' || key === 'ke') {
-    // Black, white, red, white, green
-    c.fillStyle = '#000000'; c.fillRect(x, y, w, h * 0.3);
-    c.fillStyle = '#ffffff'; c.fillRect(x, y + h * 0.3, w, h * 0.05);
-    c.fillStyle = '#BB0000'; c.fillRect(x, y + h * 0.35, w, h * 0.3);
-    c.fillStyle = '#ffffff'; c.fillRect(x, y + h * 0.65, w, h * 0.05);
-    c.fillStyle = '#006600'; c.fillRect(x, y + h * 0.7, w, h * 0.3 + 1);
-    // Maasai Shield in center
-    const cx = x + w / 2, cy = y + h / 2;
-    // Crossed spears
-    c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.035;
-    c.beginPath();
-    c.moveTo(cx - w * 0.18, cy - h * 0.38); c.lineTo(cx + w * 0.18, cy + h * 0.38);
-    c.moveTo(cx + w * 0.18, cy - h * 0.38); c.lineTo(cx - w * 0.18, cy + h * 0.38);
-    c.stroke();
-    // Shield body
-    c.fillStyle = '#BB0000';
-    c.beginPath();
-    c.ellipse(cx, cy, w * 0.09, h * 0.36, 0, 0, Math.PI * 2);
-    c.fill();
-    c.strokeStyle = '#000000'; c.lineWidth = 4; c.stroke();
-    // Shield white/black side markings
-    c.fillStyle = '#ffffff';
-    c.beginPath(); c.ellipse(cx, cy, w * 0.03, h * 0.3, 0, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#000000';
-    c.beginPath(); c.arc(cx, cy, h * 0.06, 0, Math.PI * 2); c.fill();
-  }
-  // Senegal
-  else if (key === 'senegal' || key === 'sn') {
-    vStripes(['#00853F', '#FDEF42', '#E31B23']);
-    drawStar(c, x + w / 2, y + h / 2, 5, h * 0.18, h * 0.07, '#00853F');
-  }
-  // Cameroon
-  else if (key === 'cameroon' || key === 'cm') {
-    vStripes(['#007A5E', '#CE1126', '#FCD116']);
-    drawStar(c, x + w / 2, y + h / 2, 5, h * 0.18, h * 0.07, '#FCD116');
-  }
-  // Ghana
-  else if (key === 'ghana' || key === 'gh') {
-    hStripes(['#CE1126', '#FCD116', '#006B3F']);
-    drawStar(c, x + w / 2, y + h / 2, 5, h * 0.18, h * 0.07, '#000000');
-  }
-  // Nigeria
-  else if (key === 'nigeria' || key === 'ng') {
-    vStripes(['#008751', '#ffffff', '#008751']);
-  }
-  // France
-  else if (key === 'france' || key === 'fr') {
-    vStripes(['#002395', '#ffffff', '#ED2939']);
-  }
-  // Italy
-  else if (key === 'italy' || key === 'it') {
-    vStripes(['#009246', '#ffffff', '#CE2B37']);
-  }
-  // Ireland
-  else if (key === 'ireland' || key === 'ie') {
-    vStripes(['#169B62', '#ffffff', '#FF883E']);
-  }
-  // Belgium
-  else if (key === 'belgium' || key === 'be') {
-    vStripes(['#000000', '#FDDA24', '#EF3340']);
-  }
-  // Romania / Chad
-  else if (key === 'romania' || key === 'ro' || key === 'chad' || key === 'td') {
-    vStripes(['#002B7F', '#FCD116', '#CE1126']);
-  }
-  // Mali
-  else if (key === 'mali' || key === 'ml') {
-    vStripes(['#14B53A', '#FCD116', '#CE1126']);
-  }
-  // Guinea
-  else if (key === 'guinea' || key === 'gn') {
-    vStripes(['#CE1126', '#FCD116', '#009460']);
-  }
-  // Ivory Coast / Cote d'Ivoire
-  else if (key === 'ivorycoast' || key === 'cotedivoire' || key === 'ci') {
-    vStripes(['#F77F00', '#ffffff', '#009E60']);
-  }
-  // Peru
-  else if (key === 'peru' || key === 'pe') {
-    vStripes(['#D91023', '#ffffff', '#D91023']);
-  }
-  // Germany
-  else if (key === 'germany' || key === 'de') {
-    hStripes(['#000000', '#DD0000', '#FFCE00']);
-  }
-  // Netherlands
-  else if (key === 'netherlands' || key === 'holland' || key === 'nl') {
-    hStripes(['#C8102E', '#ffffff', '#003882']);
-  }
-  // Russia
-  else if (key === 'russia' || key === 'ru') {
-    hStripes(['#ffffff', '#0039A6', '#D52B1E']);
-  }
-  // Hungary
-  else if (key === 'hungary' || key === 'hu') {
-    hStripes(['#CE2939', '#ffffff', '#477050']);
-  }
-  // Austria
-  else if (key === 'austria' || key === 'at') {
-    hStripes(['#ED2939', '#ffffff', '#ED2939']);
-  }
-  // Bulgaria
-  else if (key === 'bulgaria' || key === 'bg') {
-    hStripes(['#ffffff', '#00966E', '#D62612']);
-  }
-  // Lithuania
-  else if (key === 'lithuania' || key === 'lt') {
-    hStripes(['#FDB913', '#006A44', '#C1272D']);
-  }
-  // Estonia
-  else if (key === 'estonia' || key === 'ee') {
-    hStripes(['#0072CE', '#000000', '#ffffff']);
-  }
-  // Armenia
-  else if (key === 'armenia' || key === 'am') {
-    hStripes(['#D90012', '#0033A0', '#F2A800']);
-  }
-  // Bolivia
-  else if (key === 'bolivia' || key === 'bo') {
-    hStripes(['#D52B1E', '#FCD116', '#007934']);
-  }
-  // Yemen
-  else if (key === 'yemen' || key === 'ye') {
-    hStripes(['#CE1126', '#ffffff', '#000000']);
-  }
-  // Egypt
-  else if (key === 'egypt' || key === 'eg') {
-    hStripes(['#CE1126', '#ffffff', '#000000']);
-    drawStar(c, x + w / 2, y + h / 2, 5, h * 0.1, h * 0.05, '#C09A3E');
-  }
-  // Syria
-  else if (key === 'syria' || key === 'sy') {
-    hStripes(['#CE1126', '#ffffff', '#000000']);
-    drawStar(c, x + w * 0.38, y + h / 2, 5, h * 0.09, h * 0.04, '#007A3D');
-    drawStar(c, x + w * 0.62, y + h / 2, 5, h * 0.09, h * 0.04, '#007A3D');
-  }
-  // Iraq
-  else if (key === 'iraq' || key === 'iq') {
-    hStripes(['#CE1126', '#ffffff', '#000000']);
-    c.fillStyle = '#007A3D';
-    c.font = `700 ${Math.round(h * 0.14)}px serif`;
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('الله أكبر', x + w / 2, y + h / 2);
-  }
-  // Poland
-  else if (key === 'poland' || key === 'pl') {
-    c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h / 2);
-    c.fillStyle = '#DC143C'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
-  }
-  // Indonesia / Monaco
-  else if (key === 'indonesia' || key === 'id' || key === 'monaco' || key === 'mc') {
-    c.fillStyle = '#FF0000'; c.fillRect(x, y, w, h / 2);
-    c.fillStyle = '#ffffff'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
-  }
-  // Ukraine
-  else if (key === 'ukraine' || key === 'ua') {
-    c.fillStyle = '#005BBB'; c.fillRect(x, y, w, h / 2);
-    c.fillStyle = '#FFD500'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
-  }
-  // Japan
-  else if (key === 'japan' || key === 'jp') {
-    c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h);
-    c.fillStyle = '#bc002d'; c.beginPath(); c.arc(x + w * 0.5, y + h * 0.5, h * 0.3, 0, Math.PI * 2); c.fill();
-  }
-  // Bangladesh
-  else if (key === 'bangladesh' || key === 'bd') {
-    c.fillStyle = '#006a4e'; c.fillRect(x, y, w, h);
-    c.fillStyle = '#f42a41'; c.beginPath(); c.arc(x + w * 0.45, y + h * 0.5, h * 0.31, 0, Math.PI * 2); c.fill();
-  }
-  // Palestine
-  else if (key === 'palestine' || key === 'ps') {
-    hStripes(['#000000', '#ffffff', '#009736']);
-    drawHoistTri('#EE2A35');
-  }
-  // Jordan
-  else if (key === 'jordan' || key === 'jo') {
-    hStripes(['#000000', '#ffffff', '#009736']);
-    drawHoistTri('#CE1126');
-    drawStar(c, x + w * 0.14, y + h / 2, 7, h * 0.08, h * 0.035, '#ffffff');
-  }
-  // Sudan
-  else if (key === 'sudan' || key === 'sd') {
-    hStripes(['#D21034', '#ffffff', '#000000']);
-    drawHoistTri('#007236');
-  }
-  // Czechia / Czech Republic
-  else if (key === 'czechia' || key === 'czechrepublic' || key === 'cz') {
-    c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h / 2);
-    c.fillStyle = '#D7141A'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
-    drawHoistTri('#11457E', 0.5);
-  }
-  // Cuba
-  else if (key === 'cuba' || key === 'cu') {
-    const ch = h / 5;
-    for (let i = 0; i < 5; i++) {
-      c.fillStyle = i % 2 === 0 ? '#002A8F' : '#ffffff';
-      c.fillRect(x, y + i * ch, w, ch + 1);
-    }
-    drawHoistTri('#CF142B', 0.45);
-    drawStar(c, x + w * 0.16, y + h / 2, 5, h * 0.14, h * 0.055, '#ffffff');
-  }
-  // Bahamas
-  else if (key === 'bahamas' || key === 'bs') {
-    hStripes(['#00778B', '#FFC72C', '#00778B']);
-    drawHoistTri('#000000', 0.4);
-  }
-  // Jamaica
-  else if (key === 'jamaica' || key === 'jm') {
-    c.fillStyle = '#007749'; c.fillRect(x, y, w, h);
-    // Black triangles left & right
-    c.fillStyle = '#000000';
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + w / 2, y + h / 2); c.lineTo(x, y + h); c.closePath(); c.fill();
-    c.beginPath(); c.moveTo(x + w, y); c.lineTo(x + w / 2, y + h / 2); c.lineTo(x + w, y + h); c.closePath(); c.fill();
-    // Yellow saltire
-    c.strokeStyle = '#FFB81C'; c.lineWidth = h * 0.16;
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + h); c.moveTo(x + w, y); c.lineTo(x, y + h); c.stroke();
-  }
-  // Turkey
-  else if (key === 'turkey' || key === 'turkiye' || key === 'tr') {
-    c.fillStyle = '#E30A17'; c.fillRect(x, y, w, h);
-    const cx = x + w * 0.42, cy = y + h * 0.5;
-    drawCrescent(c, cx, cy, h * 0.25, h * 0.2, h * 0.07, '#ffffff', '#E30A17');
-    drawStar(c, cx + h * 0.28, cy, 5, h * 0.11, h * 0.045, '#ffffff');
-  }
-  // Pakistan
-  else if (key === 'pakistan' || key === 'pk') {
-    c.fillStyle = '#ffffff'; c.fillRect(x, y, w * 0.25, h);
-    c.fillStyle = '#01411C'; c.fillRect(x + w * 0.25, y, w * 0.75 + 1, h);
-    const cx = x + w * 0.62, cy = y + h * 0.5;
-    drawCrescent(c, cx, cy, h * 0.26, h * 0.22, h * 0.08, '#ffffff', '#01411C');
-    drawStar(c, cx + h * 0.18, cy - h * 0.13, 5, h * 0.085, h * 0.036, '#ffffff');
-  }
-  // Algeria
-  else if (key === 'algeria' || key === 'dz') {
-    vStripes(['#006233', '#ffffff']);
-    const cx = x + w / 2, cy = y + h / 2;
-    drawCrescent(c, cx, cy, h * 0.25, h * 0.2, h * 0.07, '#D21034', cx < x + w/2 ? '#006233' : '#ffffff');
-    drawStar(c, cx + h * 0.14, cy, 5, h * 0.1, h * 0.04, '#D21034');
-  }
-  // Tunisia
-  else if (key === 'tunisia' || key === 'tn') {
-    c.fillStyle = '#E70013'; c.fillRect(x, y, w, h);
-    c.fillStyle = '#ffffff';
-    c.beginPath(); c.arc(x + w / 2, y + h / 2, h * 0.26, 0, Math.PI * 2); c.fill();
-    const cx = x + w / 2, cy = y + h / 2;
-    drawCrescent(c, cx, cy, h * 0.18, h * 0.14, h * 0.05, '#E70013', '#ffffff');
-    drawStar(c, cx + h * 0.07, cy, 5, h * 0.08, h * 0.032, '#E70013');
-  }
-  // Vietnam
-  else if (key === 'vietnam' || key === 'vn') {
-    c.fillStyle = '#DA251D'; c.fillRect(x, y, w, h);
-    drawStar(c, x + w / 2, y + h / 2, 5, h * 0.28, h * 0.11, '#FFFF00');
-  }
-  // Somalia
-  else if (key === 'somalia' || key === 'so') {
-    c.fillStyle = '#4189DD'; c.fillRect(x, y, w, h);
-    drawStar(c, x + w / 2, y + h / 2, 5, h * 0.24, h * 0.095, '#ffffff');
-  }
-  // Morocco
-  else if (key === 'morocco' || key === 'ma') {
-    c.fillStyle = '#C1272D'; c.fillRect(x, y, w, h);
-    // Green pentagram outline
-    c.strokeStyle = '#006233'; c.lineWidth = Math.max(3, h * 0.03);
-    const cx = x + w / 2, cy = y + h / 2, r = h * 0.22;
-    c.beginPath();
-    for (let i = 0; i < 5; i++) {
-      const a = (i * 4 * Math.PI) / 5 - Math.PI / 2;
-      const px = cx + Math.cos(a) * r, py = cy + Math.sin(a) * r;
-      if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
-    }
-    c.closePath(); c.stroke();
-  }
-  // Switzerland
-  else if (key === 'switzerland' || key === 'ch') {
-    c.fillStyle = '#FF0000'; c.fillRect(x, y, w, h);
-    c.fillStyle = '#ffffff';
-    const s = h * 0.56;
-    c.fillRect(x + (w - s * 0.34) / 2, y + (h - s) / 2, s * 0.34, s);
-    c.fillRect(x + (w - s) / 2, y + (h - s * 0.34) / 2, s, s * 0.34);
-  }
-  // South Africa
-  else if (key === 'southafrica' || key === 'za') {
-    // Red top, blue bottom
-    c.fillStyle = '#E03C31'; c.fillRect(x, y, w, h / 2);
-    c.fillStyle = '#001489'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
-    // Black hoist triangle
-    drawHoistTri('#000000', 0.38);
-    // Gold triangle border
-    c.strokeStyle = '#FFB81C'; c.lineWidth = h * 0.06;
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + w * 0.38, y + h / 2); c.lineTo(x, y + h); c.stroke();
-    // Green Y pall
-    c.strokeStyle = '#007749'; c.lineWidth = h * 0.22;
-    c.beginPath();
-    c.moveTo(x, y); c.lineTo(x + w * 0.38, y + h / 2); c.lineTo(x + w, y + h / 2);
-    c.moveTo(x, y + h); c.lineTo(x + w * 0.38, y + h / 2);
-    c.stroke();
-    // White border on red/blue
-    c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.04;
-    c.beginPath();
-    c.moveTo(x + w * 0.38, y + h * 0.39); c.lineTo(x + w, y + h * 0.39);
-    c.moveTo(x + w * 0.38, y + h * 0.61); c.lineTo(x + w, y + h * 0.61);
-    c.stroke();
-  }
-  // UAE / United Arab Emirates
-  else if (key === 'uae' || key === 'unitedarabemirates' || key === 'ae') {
-    hStripes(['#00732F', '#ffffff', '#000000']);
-    c.fillStyle = '#FF0000'; c.fillRect(x, y, w * 0.28, h);
-  }
-  // Kuwait
-  else if (key === 'kuwait' || key === 'kw') {
-    hStripes(['#007A3D', '#ffffff', '#CE1126']);
-    // Black trapezoid on hoist
-    c.fillStyle = '#000000';
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + w * 0.3, y + h / 3); c.lineTo(x + w * 0.3, y + (2 * h) / 3); c.lineTo(x, y + h); c.closePath(); c.fill();
-  }
-  // Oman
-  else if (key === 'oman' || key === 'om') {
-    hStripes(['#ffffff', '#CE1126', '#008000']);
-    c.fillStyle = '#CE1126'; c.fillRect(x, y, w * 0.26, h);
-    drawStar(c, x + w * 0.13, y + h * 0.18, 5, h * 0.08, h * 0.035, '#ffffff');
-  }
-  // Saudi Arabia
-  else if (key === 'saudiarabia' || key === 'saudi' || key === 'sa') {
-    c.fillStyle = '#006C35'; c.fillRect(x, y, w, h);
-    c.fillStyle = '#ffffff';
-    c.font = `700 ${Math.round(h * 0.16)}px serif`;
-    c.textAlign = 'center'; c.textBaseline = 'middle';
-    c.fillText('لا إله إلا الله', x + w / 2, y + h * 0.42);
-    c.fillRect(x + w * 0.24, y + h * 0.64, w * 0.52, h * 0.045);
-    c.fillRect(x + w * 0.72, y + h * 0.61, w * 0.04, h * 0.11);
-  }
-  // China
-  else if (key === 'china' || key === 'cn') {
-    c.fillStyle = '#DE2910'; c.fillRect(x, y, w, h);
-    drawStar(c, x + w * 0.18, y + h * 0.28, 5, h * 0.14, h * 0.055, '#FFDE00');
-    [[0.33, 0.14], [0.39, 0.24], [0.39, 0.37], [0.33, 0.46]].forEach(([px, py]) => {
-      drawStar(c, x + w * px, y + h * py, 5, h * 0.05, h * 0.02, '#FFDE00');
-    });
-  }
-  // USA
-  else if (key === 'usa' || key === 'unitedstates' || key === 'america' || key === 'us') {
-    const sh = h / 13;
-    for (let i = 0; i < 13; i++) {
-      c.fillStyle = i % 2 === 0 ? '#b22234' : '#ffffff';
-      c.fillRect(x, y + i * sh, w, sh + 1);
-    }
-    const cw = w * 0.42, ch = sh * 7;
-    c.fillStyle = '#3c3b6e'; c.fillRect(x, y, cw, ch);
-    for (let r = 0; r < 5; r++) {
-      for (let col = 0; col < 6; col++) {
-        drawStar(c, x + (col + 0.5) * (cw / 6), y + (r + 0.5) * (ch / 5), 5, sh * 0.34, sh * 0.15, '#ffffff');
+        // --- COUNTRY MATCHES ---
+        // Bahrain
+        if (key === 'bahrain' || key === 'bh') {
+          drawSerrated('#CE1126', '#ffffff', 5);
+        }
+        // Qatar
+        else if (key === 'qatar' || key === 'qa') {
+          drawSerrated('#8D1B3D', '#ffffff', 9);
+        }
+        // Denmark
+        else if (key === 'denmark' || key === 'dk') {
+          drawNordic('#C60C30', '#ffffff');
+        }
+        // Sweden
+        else if (key === 'sweden' || key === 'se') {
+          drawNordic('#006AA7', '#FECC00');
+        }
+        // Norway
+        else if (key === 'norway' || key === 'no') {
+          drawNordic('#BA0C2F', '#00205B', '#ffffff');
+        }
+        // Finland
+        else if (key === 'finland' || key === 'fi') {
+          drawNordic('#ffffff', '#002F6C');
+        }
+        // Iceland
+        else if (key === 'iceland' || key === 'is') {
+          drawNordic('#02529C', '#DC1E35', '#ffffff');
+        }
+        // Georgia
+        else if (key === 'georgia' || key === 'ge') {
+          c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h);
+          // Large red cross
+          c.fillStyle = '#FF0000';
+          c.fillRect(x + w * 0.42, y, w * 0.16, h);
+          c.fillRect(x, y + h * 0.38, w, h * 0.24);
+          // 4 small red Bolnur-Katskhuri crosses
+          const qx = [0.21, 0.79, 0.21, 0.79], qy = [0.19, 0.19, 0.81, 0.81];
+          for (let k = 0; k < 4; k++) {
+            const cx = x + w * qx[k], cy = y + h * qy[k], cs = h * 0.08;
+            c.fillStyle = '#FF0000';
+            c.fillRect(cx - cs * 0.3, cy - cs, cs * 0.6, cs * 2);
+            c.fillRect(cx - cs, cy - cs * 0.3, cs * 2, cs * 0.6);
+          }
+        }
+        // Kenya
+        else if (key === 'kenya' || key === 'ke') {
+          // Black, white, red, white, green
+          c.fillStyle = '#000000'; c.fillRect(x, y, w, h * 0.3);
+          c.fillStyle = '#ffffff'; c.fillRect(x, y + h * 0.3, w, h * 0.05);
+          c.fillStyle = '#BB0000'; c.fillRect(x, y + h * 0.35, w, h * 0.3);
+          c.fillStyle = '#ffffff'; c.fillRect(x, y + h * 0.65, w, h * 0.05);
+          c.fillStyle = '#006600'; c.fillRect(x, y + h * 0.7, w, h * 0.3 + 1);
+          // Maasai Shield in center
+          const cx = x + w / 2, cy = y + h / 2;
+          // Crossed spears
+          c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.035;
+          c.beginPath();
+          c.moveTo(cx - w * 0.18, cy - h * 0.38); c.lineTo(cx + w * 0.18, cy + h * 0.38);
+          c.moveTo(cx + w * 0.18, cy - h * 0.38); c.lineTo(cx - w * 0.18, cy + h * 0.38);
+          c.stroke();
+          // Shield body
+          c.fillStyle = '#BB0000';
+          c.beginPath();
+          c.ellipse(cx, cy, w * 0.09, h * 0.36, 0, 0, Math.PI * 2);
+          c.fill();
+          c.strokeStyle = '#000000'; c.lineWidth = 4; c.stroke();
+          // Shield white/black side markings
+          c.fillStyle = '#ffffff';
+          c.beginPath(); c.ellipse(cx, cy, w * 0.03, h * 0.3, 0, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#000000';
+          c.beginPath(); c.arc(cx, cy, h * 0.06, 0, Math.PI * 2); c.fill();
+        }
+        // Senegal
+        else if (key === 'senegal' || key === 'sn') {
+          vStripes(['#00853F', '#FDEF42', '#E31B23']);
+          drawStar(c, x + w / 2, y + h / 2, 5, h * 0.18, h * 0.07, '#00853F');
+        }
+        // Cameroon
+        else if (key === 'cameroon' || key === 'cm') {
+          vStripes(['#007A5E', '#CE1126', '#FCD116']);
+          drawStar(c, x + w / 2, y + h / 2, 5, h * 0.18, h * 0.07, '#FCD116');
+        }
+        // Ghana
+        else if (key === 'ghana' || key === 'gh') {
+          hStripes(['#CE1126', '#FCD116', '#006B3F']);
+          drawStar(c, x + w / 2, y + h / 2, 5, h * 0.18, h * 0.07, '#000000');
+        }
+        // Nigeria
+        else if (key === 'nigeria' || key === 'ng') {
+          vStripes(['#008751', '#ffffff', '#008751']);
+        }
+        // France
+        else if (key === 'france' || key === 'fr') {
+          vStripes(['#002395', '#ffffff', '#ED2939']);
+        }
+        // Italy
+        else if (key === 'italy' || key === 'it') {
+          vStripes(['#009246', '#ffffff', '#CE2B37']);
+        }
+        // Ireland
+        else if (key === 'ireland' || key === 'ie') {
+          vStripes(['#169B62', '#ffffff', '#FF883E']);
+        }
+        // Belgium
+        else if (key === 'belgium' || key === 'be') {
+          vStripes(['#000000', '#FDDA24', '#EF3340']);
+        }
+        // Romania / Chad
+        else if (key === 'romania' || key === 'ro' || key === 'chad' || key === 'td') {
+          vStripes(['#002B7F', '#FCD116', '#CE1126']);
+        }
+        // Mali
+        else if (key === 'mali' || key === 'ml') {
+          vStripes(['#14B53A', '#FCD116', '#CE1126']);
+        }
+        // Guinea
+        else if (key === 'guinea' || key === 'gn') {
+          vStripes(['#CE1126', '#FCD116', '#009460']);
+        }
+        // Ivory Coast / Cote d'Ivoire
+        else if (key === 'ivorycoast' || key === 'cotedivoire' || key === 'ci') {
+          vStripes(['#F77F00', '#ffffff', '#009E60']);
+        }
+        // Peru
+        else if (key === 'peru' || key === 'pe') {
+          vStripes(['#D91023', '#ffffff', '#D91023']);
+        }
+        // Germany
+        else if (key === 'germany' || key === 'de') {
+          hStripes(['#000000', '#DD0000', '#FFCE00']);
+        }
+        // Netherlands
+        else if (key === 'netherlands' || key === 'holland' || key === 'nl') {
+          hStripes(['#C8102E', '#ffffff', '#003882']);
+        }
+        // Russia
+        else if (key === 'russia' || key === 'ru') {
+          hStripes(['#ffffff', '#0039A6', '#D52B1E']);
+        }
+        // Hungary
+        else if (key === 'hungary' || key === 'hu') {
+          hStripes(['#CE2939', '#ffffff', '#477050']);
+        }
+        // Austria
+        else if (key === 'austria' || key === 'at') {
+          hStripes(['#ED2939', '#ffffff', '#ED2939']);
+        }
+        // Bulgaria
+        else if (key === 'bulgaria' || key === 'bg') {
+          hStripes(['#ffffff', '#00966E', '#D62612']);
+        }
+        // Lithuania
+        else if (key === 'lithuania' || key === 'lt') {
+          hStripes(['#FDB913', '#006A44', '#C1272D']);
+        }
+        // Estonia
+        else if (key === 'estonia' || key === 'ee') {
+          hStripes(['#0072CE', '#000000', '#ffffff']);
+        }
+        // Armenia
+        else if (key === 'armenia' || key === 'am') {
+          hStripes(['#D90012', '#0033A0', '#F2A800']);
+        }
+        // Bolivia
+        else if (key === 'bolivia' || key === 'bo') {
+          hStripes(['#D52B1E', '#FCD116', '#007934']);
+        }
+        // Yemen
+        else if (key === 'yemen' || key === 'ye') {
+          hStripes(['#CE1126', '#ffffff', '#000000']);
+        }
+        // Egypt
+        else if (key === 'egypt' || key === 'eg') {
+          hStripes(['#CE1126', '#ffffff', '#000000']);
+          drawStar(c, x + w / 2, y + h / 2, 5, h * 0.1, h * 0.05, '#C09A3E');
+        }
+        // Syria
+        else if (key === 'syria' || key === 'sy') {
+          hStripes(['#CE1126', '#ffffff', '#000000']);
+          drawStar(c, x + w * 0.38, y + h / 2, 5, h * 0.09, h * 0.04, '#007A3D');
+          drawStar(c, x + w * 0.62, y + h / 2, 5, h * 0.09, h * 0.04, '#007A3D');
+        }
+        // Iraq
+        else if (key === 'iraq' || key === 'iq') {
+          hStripes(['#CE1126', '#ffffff', '#000000']);
+          c.fillStyle = '#007A3D';
+          c.font = `700 ${Math.round(h * 0.14)}px serif`;
+          c.textAlign = 'center'; c.textBaseline = 'middle';
+          c.fillText('الله أكبر', x + w / 2, y + h / 2);
+        }
+        // Poland
+        else if (key === 'poland' || key === 'pl') {
+          c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h / 2);
+          c.fillStyle = '#DC143C'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
+        }
+        // Indonesia / Monaco
+        else if (key === 'indonesia' || key === 'id' || key === 'monaco' || key === 'mc') {
+          c.fillStyle = '#FF0000'; c.fillRect(x, y, w, h / 2);
+          c.fillStyle = '#ffffff'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
+        }
+        // Ukraine
+        else if (key === 'ukraine' || key === 'ua') {
+          c.fillStyle = '#005BBB'; c.fillRect(x, y, w, h / 2);
+          c.fillStyle = '#FFD500'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
+        }
+        // Japan
+        else if (key === 'japan' || key === 'jp') {
+          c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h);
+          c.fillStyle = '#bc002d'; c.beginPath(); c.arc(x + w * 0.5, y + h * 0.5, h * 0.3, 0, Math.PI * 2); c.fill();
+        }
+        // Bangladesh
+        else if (key === 'bangladesh' || key === 'bd') {
+          c.fillStyle = '#006a4e'; c.fillRect(x, y, w, h);
+          c.fillStyle = '#f42a41'; c.beginPath(); c.arc(x + w * 0.45, y + h * 0.5, h * 0.31, 0, Math.PI * 2); c.fill();
+        }
+        // Palestine
+        else if (key === 'palestine' || key === 'ps') {
+          hStripes(['#000000', '#ffffff', '#009736']);
+          drawHoistTri('#EE2A35');
+        }
+        // Jordan
+        else if (key === 'jordan' || key === 'jo') {
+          hStripes(['#000000', '#ffffff', '#009736']);
+          drawHoistTri('#CE1126');
+          drawStar(c, x + w * 0.14, y + h / 2, 7, h * 0.08, h * 0.035, '#ffffff');
+        }
+        // Sudan
+        else if (key === 'sudan' || key === 'sd') {
+          hStripes(['#D21034', '#ffffff', '#000000']);
+          drawHoistTri('#007236');
+        }
+        // Czechia / Czech Republic
+        else if (key === 'czechia' || key === 'czechrepublic' || key === 'cz') {
+          c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h / 2);
+          c.fillStyle = '#D7141A'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
+          drawHoistTri('#11457E', 0.5);
+        }
+        // Cuba
+        else if (key === 'cuba' || key === 'cu') {
+          const ch = h / 5;
+          for (let i = 0; i < 5; i++) {
+            c.fillStyle = i % 2 === 0 ? '#002A8F' : '#ffffff';
+            c.fillRect(x, y + i * ch, w, ch + 1);
+          }
+          drawHoistTri('#CF142B', 0.45);
+          drawStar(c, x + w * 0.16, y + h / 2, 5, h * 0.14, h * 0.055, '#ffffff');
+        }
+        // Bahamas
+        else if (key === 'bahamas' || key === 'bs') {
+          hStripes(['#00778B', '#FFC72C', '#00778B']);
+          drawHoistTri('#000000', 0.4);
+        }
+        // Jamaica
+        else if (key === 'jamaica' || key === 'jm') {
+          c.fillStyle = '#007749'; c.fillRect(x, y, w, h);
+          // Black triangles left & right
+          c.fillStyle = '#000000';
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + w / 2, y + h / 2); c.lineTo(x, y + h); c.closePath(); c.fill();
+          c.beginPath(); c.moveTo(x + w, y); c.lineTo(x + w / 2, y + h / 2); c.lineTo(x + w, y + h); c.closePath(); c.fill();
+          // Yellow saltire
+          c.strokeStyle = '#FFB81C'; c.lineWidth = h * 0.16;
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + h); c.moveTo(x + w, y); c.lineTo(x, y + h); c.stroke();
+        }
+        // Turkey
+        else if (key === 'turkey' || key === 'turkiye' || key === 'tr') {
+          c.fillStyle = '#E30A17'; c.fillRect(x, y, w, h);
+          const cx = x + w * 0.42, cy = y + h * 0.5;
+          drawCrescent(c, cx, cy, h * 0.25, h * 0.2, h * 0.07, '#ffffff', '#E30A17');
+          drawStar(c, cx + h * 0.28, cy, 5, h * 0.11, h * 0.045, '#ffffff');
+        }
+        // Pakistan
+        else if (key === 'pakistan' || key === 'pk') {
+          c.fillStyle = '#ffffff'; c.fillRect(x, y, w * 0.25, h);
+          c.fillStyle = '#01411C'; c.fillRect(x + w * 0.25, y, w * 0.75 + 1, h);
+          const cx = x + w * 0.62, cy = y + h * 0.5;
+          drawCrescent(c, cx, cy, h * 0.26, h * 0.22, h * 0.08, '#ffffff', '#01411C');
+          drawStar(c, cx + h * 0.18, cy - h * 0.13, 5, h * 0.085, h * 0.036, '#ffffff');
+        }
+        // Algeria
+        else if (key === 'algeria' || key === 'dz') {
+          vStripes(['#006233', '#ffffff']);
+          const cx = x + w / 2, cy = y + h / 2;
+          drawCrescent(c, cx, cy, h * 0.25, h * 0.2, h * 0.07, '#D21034', cx < x + w / 2 ? '#006233' : '#ffffff');
+          drawStar(c, cx + h * 0.14, cy, 5, h * 0.1, h * 0.04, '#D21034');
+        }
+        // Tunisia
+        else if (key === 'tunisia' || key === 'tn') {
+          c.fillStyle = '#E70013'; c.fillRect(x, y, w, h);
+          c.fillStyle = '#ffffff';
+          c.beginPath(); c.arc(x + w / 2, y + h / 2, h * 0.26, 0, Math.PI * 2); c.fill();
+          const cx = x + w / 2, cy = y + h / 2;
+          drawCrescent(c, cx, cy, h * 0.18, h * 0.14, h * 0.05, '#E70013', '#ffffff');
+          drawStar(c, cx + h * 0.07, cy, 5, h * 0.08, h * 0.032, '#E70013');
+        }
+        // Vietnam
+        else if (key === 'vietnam' || key === 'vn') {
+          c.fillStyle = '#DA251D'; c.fillRect(x, y, w, h);
+          drawStar(c, x + w / 2, y + h / 2, 5, h * 0.28, h * 0.11, '#FFFF00');
+        }
+        // Somalia
+        else if (key === 'somalia' || key === 'so') {
+          c.fillStyle = '#4189DD'; c.fillRect(x, y, w, h);
+          drawStar(c, x + w / 2, y + h / 2, 5, h * 0.24, h * 0.095, '#ffffff');
+        }
+        // Morocco
+        else if (key === 'morocco' || key === 'ma') {
+          c.fillStyle = '#C1272D'; c.fillRect(x, y, w, h);
+          // Green pentagram outline
+          c.strokeStyle = '#006233'; c.lineWidth = Math.max(3, h * 0.03);
+          const cx = x + w / 2, cy = y + h / 2, r = h * 0.22;
+          c.beginPath();
+          for (let i = 0; i < 5; i++) {
+            const a = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+            const px = cx + Math.cos(a) * r, py = cy + Math.sin(a) * r;
+            if (i === 0) c.moveTo(px, py); else c.lineTo(px, py);
+          }
+          c.closePath(); c.stroke();
+        }
+        // Switzerland
+        else if (key === 'switzerland' || key === 'ch') {
+          c.fillStyle = '#FF0000'; c.fillRect(x, y, w, h);
+          c.fillStyle = '#ffffff';
+          const s = h * 0.56;
+          c.fillRect(x + (w - s * 0.34) / 2, y + (h - s) / 2, s * 0.34, s);
+          c.fillRect(x + (w - s) / 2, y + (h - s * 0.34) / 2, s, s * 0.34);
+        }
+        // South Africa
+        else if (key === 'southafrica' || key === 'za') {
+          // Red top, blue bottom
+          c.fillStyle = '#E03C31'; c.fillRect(x, y, w, h / 2);
+          c.fillStyle = '#001489'; c.fillRect(x, y + h / 2, w, h / 2 + 1);
+          // Black hoist triangle
+          drawHoistTri('#000000', 0.38);
+          // Gold triangle border
+          c.strokeStyle = '#FFB81C'; c.lineWidth = h * 0.06;
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + w * 0.38, y + h / 2); c.lineTo(x, y + h); c.stroke();
+          // Green Y pall
+          c.strokeStyle = '#007749'; c.lineWidth = h * 0.22;
+          c.beginPath();
+          c.moveTo(x, y); c.lineTo(x + w * 0.38, y + h / 2); c.lineTo(x + w, y + h / 2);
+          c.moveTo(x, y + h); c.lineTo(x + w * 0.38, y + h / 2);
+          c.stroke();
+          // White border on red/blue
+          c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.04;
+          c.beginPath();
+          c.moveTo(x + w * 0.38, y + h * 0.39); c.lineTo(x + w, y + h * 0.39);
+          c.moveTo(x + w * 0.38, y + h * 0.61); c.lineTo(x + w, y + h * 0.61);
+          c.stroke();
+        }
+        // UAE / United Arab Emirates
+        else if (key === 'uae' || key === 'unitedarabemirates' || key === 'ae') {
+          hStripes(['#00732F', '#ffffff', '#000000']);
+          c.fillStyle = '#FF0000'; c.fillRect(x, y, w * 0.28, h);
+        }
+        // Kuwait
+        else if (key === 'kuwait' || key === 'kw') {
+          hStripes(['#007A3D', '#ffffff', '#CE1126']);
+          // Black trapezoid on hoist
+          c.fillStyle = '#000000';
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + w * 0.3, y + h / 3); c.lineTo(x + w * 0.3, y + (2 * h) / 3); c.lineTo(x, y + h); c.closePath(); c.fill();
+        }
+        // Oman
+        else if (key === 'oman' || key === 'om') {
+          hStripes(['#ffffff', '#CE1126', '#008000']);
+          c.fillStyle = '#CE1126'; c.fillRect(x, y, w * 0.26, h);
+          drawStar(c, x + w * 0.13, y + h * 0.18, 5, h * 0.08, h * 0.035, '#ffffff');
+        }
+        // Saudi Arabia
+        else if (key === 'saudiarabia' || key === 'saudi' || key === 'sa') {
+          c.fillStyle = '#006C35'; c.fillRect(x, y, w, h);
+          c.fillStyle = '#ffffff';
+          c.font = `700 ${Math.round(h * 0.16)}px serif`;
+          c.textAlign = 'center'; c.textBaseline = 'middle';
+          c.fillText('لا إله إلا الله', x + w / 2, y + h * 0.42);
+          c.fillRect(x + w * 0.24, y + h * 0.64, w * 0.52, h * 0.045);
+          c.fillRect(x + w * 0.72, y + h * 0.61, w * 0.04, h * 0.11);
+        }
+        // China
+        else if (key === 'china' || key === 'cn') {
+          c.fillStyle = '#DE2910'; c.fillRect(x, y, w, h);
+          drawStar(c, x + w * 0.18, y + h * 0.28, 5, h * 0.14, h * 0.055, '#FFDE00');
+          [[0.33, 0.14], [0.39, 0.24], [0.39, 0.37], [0.33, 0.46]].forEach(([px, py]) => {
+            drawStar(c, x + w * px, y + h * py, 5, h * 0.05, h * 0.02, '#FFDE00');
+          });
+        }
+        // USA
+        else if (key === 'usa' || key === 'unitedstates' || key === 'america' || key === 'us') {
+          const sh = h / 13;
+          for (let i = 0; i < 13; i++) {
+            c.fillStyle = i % 2 === 0 ? '#b22234' : '#ffffff';
+            c.fillRect(x, y + i * sh, w, sh + 1);
+          }
+          const cw = w * 0.42, ch = sh * 7;
+          c.fillStyle = '#3c3b6e'; c.fillRect(x, y, cw, ch);
+          for (let r = 0; r < 5; r++) {
+            for (let col = 0; col < 6; col++) {
+              drawStar(c, x + (col + 0.5) * (cw / 6), y + (r + 0.5) * (ch / 5), 5, sh * 0.34, sh * 0.15, '#ffffff');
+            }
+          }
+        }
+        // UK
+        else if (key === 'uk' || key === 'unitedkingdom' || key === 'britain' || key === 'england') {
+          c.fillStyle = '#012169'; c.fillRect(x, y, w, h);
+          c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.2;
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + h); c.moveTo(x + w, y); c.lineTo(x, y + h); c.stroke();
+          c.strokeStyle = '#C8102E'; c.lineWidth = h * 0.08;
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + h); c.moveTo(x + w, y); c.lineTo(x, y + h); c.stroke();
+          c.fillStyle = '#ffffff'; c.fillRect(x + w * 0.4, y, w * 0.2, h); c.fillRect(x, y + h * 0.36, w, h * 0.28);
+          c.fillStyle = '#C8102E'; c.fillRect(x + w * 0.44, y, w * 0.12, h); c.fillRect(x, y + h * 0.42, w, h * 0.16);
+        }
+        // Canada
+        else if (key === 'canada' || key === 'ca') {
+          c.fillStyle = '#ff0000'; c.fillRect(x, y, w * 0.25, h);
+          c.fillStyle = '#ffffff'; c.fillRect(x + w * 0.25, y, w * 0.5, h);
+          c.fillStyle = '#ff0000'; c.fillRect(x + w * 0.75, y, w * 0.25 + 1, h);
+          const cx = x + w / 2, cy = y + h / 2, s = h * 0.28;
+          c.fillStyle = '#ff0000';
+          c.beginPath();
+          c.moveTo(cx, cy - s);
+          c.lineTo(cx + s * 0.25, cy - s * 0.35); c.lineTo(cx + s * 0.85, cy - s * 0.45);
+          c.lineTo(cx + s * 0.55, cy + s * 0.05); c.lineTo(cx + s * 0.75, cy + s * 0.35);
+          c.lineTo(cx + s * 0.12, cy + s * 0.3); c.lineTo(cx + s * 0.08, cy + s * 0.85);
+          c.lineTo(cx - s * 0.08, cy + s * 0.85); c.lineTo(cx - s * 0.12, cy + s * 0.3);
+          c.lineTo(cx - s * 0.75, cy + s * 0.35); c.lineTo(cx - s * 0.55, cy + s * 0.05);
+          c.lineTo(cx - s * 0.85, cy - s * 0.45); c.lineTo(cx - s * 0.25, cy - s * 0.35);
+          c.closePath(); c.fill();
+        }
+        // Brazil
+        else if (key === 'brazil' || key === 'br') {
+          c.fillStyle = '#009c3b'; c.fillRect(x, y, w, h);
+          c.fillStyle = '#ffdf00';
+          c.beginPath();
+          c.moveTo(x + w * 0.5, y + h * 0.12); c.lineTo(x + w * 0.88, y + h * 0.5);
+          c.lineTo(x + w * 0.5, y + h * 0.88); c.lineTo(x + w * 0.12, y + h * 0.5);
+          c.closePath(); c.fill();
+          c.fillStyle = '#002776';
+          c.beginPath(); c.arc(x + w * 0.5, y + h * 0.5, h * 0.21, 0, Math.PI * 2); c.fill();
+          c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.04;
+          c.beginPath(); c.arc(x + w * 0.45, y + h * 0.72, h * 0.34, -Math.PI * 0.68, -Math.PI * 0.28); c.stroke();
+        }
+        // India
+        else if (key === 'india' || key === 'in') {
+          c.fillStyle = '#FF9933'; c.fillRect(x, y, w, h / 3);
+          c.fillStyle = '#ffffff'; c.fillRect(x, y + h / 3, w, h / 3);
+          c.fillStyle = '#138808'; c.fillRect(x, y + (2 * h) / 3, w, h / 3 + 1);
+          const cx = x + w / 2, cy = y + h / 2, r = h * 0.125;
+          c.strokeStyle = '#000080'; c.lineWidth = Math.max(3, h * 0.015);
+          c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
+          for (let i = 0; i < 24; i++) {
+            const a = (i * Math.PI * 2) / 24;
+            c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); c.stroke();
+          }
+        }
+        // Argentina
+        else if (key === 'argentina' || key === 'ar') {
+          hStripes(['#74ACDF', '#ffffff', '#74ACDF']);
+          drawStar(c, x + w / 2, y + h / 2, 12, h * 0.11, h * 0.065, '#F6B40E');
+        }
+        // Colombia
+        else if (key === 'colombia' || key === 'co') {
+          c.fillStyle = '#FCD116'; c.fillRect(x, y, w, h * 0.5);
+          c.fillStyle = '#003893'; c.fillRect(x, y + h * 0.5, w, h * 0.25);
+          c.fillStyle = '#CE1126'; c.fillRect(x, y + h * 0.75, w, h * 0.25 + 1);
+        }
+        // Ecuador
+        else if (key === 'ecuador' || key === 'ec') {
+          c.fillStyle = '#FFDD00'; c.fillRect(x, y, w, h * 0.5);
+          c.fillStyle = '#034EA2'; c.fillRect(x, y + h * 0.5, w, h * 0.25);
+          c.fillStyle = '#ED1C24'; c.fillRect(x, y + h * 0.75, w, h * 0.25 + 1);
+          drawStar(c, x + w / 2, y + h * 0.5, 8, h * 0.1, h * 0.05, '#034EA2');
+        }
+        // Venezuela
+        else if (key === 'venezuela' || key === 've') {
+          hStripes(['#FCE300', '#00247D', '#CF142B']);
+          for (let i = 0; i < 8; i++) {
+            const a = Math.PI * 0.8 + (i / 7) * Math.PI * 0.4;
+            drawStar(c, x + w / 2 + Math.cos(a) * w * 0.2, y + h * 0.65 - Math.sin(a) * h * 0.25, 5, h * 0.035, h * 0.015, '#ffffff');
+          }
+        }
+        // Australia
+        else if (key === 'australia' || key === 'au') {
+          c.fillStyle = '#00008B'; c.fillRect(x, y, w, h);
+          // Canton Union Jack
+          const cw = w * 0.48, ch = h * 0.48;
+          c.fillStyle = '#012169'; c.fillRect(x, y, cw, ch);
+          c.strokeStyle = '#ffffff'; c.lineWidth = ch * 0.2;
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + cw, y + ch); c.moveTo(x + cw, y); c.lineTo(x, y + ch); c.stroke();
+          c.strokeStyle = '#C8102E'; c.lineWidth = ch * 0.08;
+          c.beginPath(); c.moveTo(x, y); c.lineTo(x + cw, y + ch); c.moveTo(x + cw, y); c.lineTo(x, y + ch); c.stroke();
+          c.fillStyle = '#ffffff'; c.fillRect(x + cw * 0.4, y, cw * 0.2, ch); c.fillRect(x, y + ch * 0.36, cw, ch * 0.28);
+          c.fillStyle = '#C8102E'; c.fillRect(x + cw * 0.44, y, cw * 0.12, ch); c.fillRect(x, y + ch * 0.42, cw, ch * 0.16);
+          drawStar(c, x + w * 0.24, y + h * 0.74, 7, h * 0.11, h * 0.045, '#ffffff');
+          [[0.75, 0.22], [0.68, 0.46], [0.85, 0.42], [0.76, 0.75], [0.81, 0.58]].forEach(([px, py]) => {
+            drawStar(c, x + w * px, y + h * py, 7, h * 0.055, h * 0.025, '#ffffff');
+          });
+        }
+        // Greece
+        else if (key === 'greece' || key === 'gr') {
+          const sh = h / 9;
+          for (let i = 0; i < 9; i++) {
+            c.fillStyle = i % 2 === 0 ? '#0D5EAF' : '#ffffff';
+            c.fillRect(x, y + i * sh, w, sh + 1);
+          }
+          const cw = sh * 5, ch = sh * 5;
+          c.fillStyle = '#0D5EAF'; c.fillRect(x, y, cw, ch);
+          c.fillStyle = '#ffffff';
+          c.fillRect(x + cw * 0.38, y, cw * 0.24, ch);
+          c.fillRect(x, y + ch * 0.38, cw, ch * 0.24);
+        }
+        // South Korea
+        else if (key === 'southkorea' || key === 'korea' || key === 'kr') {
+          c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h);
+          const cx = x + w / 2, cy = y + h / 2, r = h * 0.23;
+          c.fillStyle = '#CD2E3A'; c.beginPath(); c.arc(cx, cy, r, Math.PI, 0); c.fill();
+          c.fillStyle = '#0047A0'; c.beginPath(); c.arc(cx, cy, r, 0, Math.PI); c.fill();
+          c.fillStyle = '#CD2E3A'; c.beginPath(); c.arc(cx - r / 2, cy, r / 2, 0, Math.PI * 2); c.fill();
+          c.fillStyle = '#0047A0'; c.beginPath(); c.arc(cx + r / 2, cy, r / 2, 0, Math.PI * 2); c.fill();
+          const bars = [[0.22, 0.24, -0.58], [0.78, 0.24, 0.58], [0.22, 0.76, 0.58], [0.78, 0.76, -0.58]];
+          c.fillStyle = '#000000';
+          bars.forEach(([bx, by, ang]) => {
+            c.save(); c.translate(x + w * bx, y + h * by); c.rotate(ang);
+            for (let k = -1; k <= 1; k++) c.fillRect(-w * 0.08, k * h * 0.045 - h * 0.014, w * 0.16, h * 0.026);
+            c.restore();
+          });
+        }
+        // Generic Fallback / Smart Auto Flag Generator
+        else {
+          // Generate an authentic procedural country flag based on name hash so ANY country renders a crisp flag!
+          let hash = 0;
+          for (let i = 0; i < key.length; i++) hash = ((hash << 5) - hash) + key.charCodeAt(i);
+          const palette = ['#E11D48', '#2563EB', '#16A34A', '#CA8A04', '#0F172A', '#ffffff', '#9333EA', '#0D9488'];
+          const c1 = palette[Math.abs(hash) % palette.length];
+          const c2 = palette[Math.abs(hash >> 3) % palette.length];
+          const c3 = palette[Math.abs(hash >> 6) % palette.length];
+          const style = Math.abs(hash) % 4;
+          if (style === 0) hStripes([c1, c2, c3]);
+          else if (style === 1) vStripes([c1, c2, c3]);
+          else if (style === 2) {
+            hStripes([c1, c2, c1]);
+            drawStar(c, x + w / 2, y + h / 2, 5, h * 0.2, h * 0.08, c3 === c1 ? '#ffffff' : c3);
+          } else {
+            drawNordic(c1, c2, c3);
+          }
+        }
+
+        // Subtle glossy flag border
+        c.strokeStyle = 'rgba(0,0,0,0.18)';
+        c.lineWidth = 4;
+        c.strokeRect(x, y, w, h);
+        c.restore();
+        return true;
       }
-    }
-  }
-  // UK
-  else if (key === 'uk' || key === 'unitedkingdom' || key === 'britain' || key === 'england') {
-    c.fillStyle = '#012169'; c.fillRect(x, y, w, h);
-    c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.2;
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + h); c.moveTo(x + w, y); c.lineTo(x, y + h); c.stroke();
-    c.strokeStyle = '#C8102E'; c.lineWidth = h * 0.08;
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + w, y + h); c.moveTo(x + w, y); c.lineTo(x, y + h); c.stroke();
-    c.fillStyle = '#ffffff'; c.fillRect(x + w * 0.4, y, w * 0.2, h); c.fillRect(x, y + h * 0.36, w, h * 0.28);
-    c.fillStyle = '#C8102E'; c.fillRect(x + w * 0.44, y, w * 0.12, h); c.fillRect(x, y + h * 0.42, w, h * 0.16);
-  }
-  // Canada
-  else if (key === 'canada' || key === 'ca') {
-    c.fillStyle = '#ff0000'; c.fillRect(x, y, w * 0.25, h);
-    c.fillStyle = '#ffffff'; c.fillRect(x + w * 0.25, y, w * 0.5, h);
-    c.fillStyle = '#ff0000'; c.fillRect(x + w * 0.75, y, w * 0.25 + 1, h);
-    const cx = x + w / 2, cy = y + h / 2, s = h * 0.28;
-    c.fillStyle = '#ff0000';
-    c.beginPath();
-    c.moveTo(cx, cy - s);
-    c.lineTo(cx + s * 0.25, cy - s * 0.35); c.lineTo(cx + s * 0.85, cy - s * 0.45);
-    c.lineTo(cx + s * 0.55, cy + s * 0.05); c.lineTo(cx + s * 0.75, cy + s * 0.35);
-    c.lineTo(cx + s * 0.12, cy + s * 0.3); c.lineTo(cx + s * 0.08, cy + s * 0.85);
-    c.lineTo(cx - s * 0.08, cy + s * 0.85); c.lineTo(cx - s * 0.12, cy + s * 0.3);
-    c.lineTo(cx - s * 0.75, cy + s * 0.35); c.lineTo(cx - s * 0.55, cy + s * 0.05);
-    c.lineTo(cx - s * 0.85, cy - s * 0.45); c.lineTo(cx - s * 0.25, cy - s * 0.35);
-    c.closePath(); c.fill();
-  }
-  // Brazil
-  else if (key === 'brazil' || key === 'br') {
-    c.fillStyle = '#009c3b'; c.fillRect(x, y, w, h);
-    c.fillStyle = '#ffdf00';
-    c.beginPath();
-    c.moveTo(x + w * 0.5, y + h * 0.12); c.lineTo(x + w * 0.88, y + h * 0.5);
-    c.lineTo(x + w * 0.5, y + h * 0.88); c.lineTo(x + w * 0.12, y + h * 0.5);
-    c.closePath(); c.fill();
-    c.fillStyle = '#002776';
-    c.beginPath(); c.arc(x + w * 0.5, y + h * 0.5, h * 0.21, 0, Math.PI * 2); c.fill();
-    c.strokeStyle = '#ffffff'; c.lineWidth = h * 0.04;
-    c.beginPath(); c.arc(x + w * 0.45, y + h * 0.72, h * 0.34, -Math.PI * 0.68, -Math.PI * 0.28); c.stroke();
-  }
-  // India
-  else if (key === 'india' || key === 'in') {
-    c.fillStyle = '#FF9933'; c.fillRect(x, y, w, h / 3);
-    c.fillStyle = '#ffffff'; c.fillRect(x, y + h / 3, w, h / 3);
-    c.fillStyle = '#138808'; c.fillRect(x, y + (2 * h) / 3, w, h / 3 + 1);
-    const cx = x + w / 2, cy = y + h / 2, r = h * 0.125;
-    c.strokeStyle = '#000080'; c.lineWidth = Math.max(3, h * 0.015);
-    c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.stroke();
-    for (let i = 0; i < 24; i++) {
-      const a = (i * Math.PI * 2) / 24;
-      c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); c.stroke();
-    }
-  }
-  // Argentina
-  else if (key === 'argentina' || key === 'ar') {
-    hStripes(['#74ACDF', '#ffffff', '#74ACDF']);
-    drawStar(c, x + w / 2, y + h / 2, 12, h * 0.11, h * 0.065, '#F6B40E');
-  }
-  // Colombia
-  else if (key === 'colombia' || key === 'co') {
-    c.fillStyle = '#FCD116'; c.fillRect(x, y, w, h * 0.5);
-    c.fillStyle = '#003893'; c.fillRect(x, y + h * 0.5, w, h * 0.25);
-    c.fillStyle = '#CE1126'; c.fillRect(x, y + h * 0.75, w, h * 0.25 + 1);
-  }
-  // Ecuador
-  else if (key === 'ecuador' || key === 'ec') {
-    c.fillStyle = '#FFDD00'; c.fillRect(x, y, w, h * 0.5);
-    c.fillStyle = '#034EA2'; c.fillRect(x, y + h * 0.5, w, h * 0.25);
-    c.fillStyle = '#ED1C24'; c.fillRect(x, y + h * 0.75, w, h * 0.25 + 1);
-    drawStar(c, x + w / 2, y + h * 0.5, 8, h * 0.1, h * 0.05, '#034EA2');
-  }
-  // Venezuela
-  else if (key === 'venezuela' || key === 've') {
-    hStripes(['#FCE300', '#00247D', '#CF142B']);
-    for (let i = 0; i < 8; i++) {
-      const a = Math.PI * 0.8 + (i / 7) * Math.PI * 0.4;
-      drawStar(c, x + w / 2 + Math.cos(a) * w * 0.2, y + h * 0.65 - Math.sin(a) * h * 0.25, 5, h * 0.035, h * 0.015, '#ffffff');
-    }
-  }
-  // Australia
-  else if (key === 'australia' || key === 'au') {
-    c.fillStyle = '#00008B'; c.fillRect(x, y, w, h);
-    // Canton Union Jack
-    const cw = w * 0.48, ch = h * 0.48;
-    c.fillStyle = '#012169'; c.fillRect(x, y, cw, ch);
-    c.strokeStyle = '#ffffff'; c.lineWidth = ch * 0.2;
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + cw, y + ch); c.moveTo(x + cw, y); c.lineTo(x, y + ch); c.stroke();
-    c.strokeStyle = '#C8102E'; c.lineWidth = ch * 0.08;
-    c.beginPath(); c.moveTo(x, y); c.lineTo(x + cw, y + ch); c.moveTo(x + cw, y); c.lineTo(x, y + ch); c.stroke();
-    c.fillStyle = '#ffffff'; c.fillRect(x + cw * 0.4, y, cw * 0.2, ch); c.fillRect(x, y + ch * 0.36, cw, ch * 0.28);
-    c.fillStyle = '#C8102E'; c.fillRect(x + cw * 0.44, y, cw * 0.12, ch); c.fillRect(x, y + ch * 0.42, cw, ch * 0.16);
-    drawStar(c, x + w * 0.24, y + h * 0.74, 7, h * 0.11, h * 0.045, '#ffffff');
-    [[0.75, 0.22], [0.68, 0.46], [0.85, 0.42], [0.76, 0.75], [0.81, 0.58]].forEach(([px, py]) => {
-      drawStar(c, x + w * px, y + h * py, 7, h * 0.055, h * 0.025, '#ffffff');
-    });
-  }
-  // Greece
-  else if (key === 'greece' || key === 'gr') {
-    const sh = h / 9;
-    for (let i = 0; i < 9; i++) {
-      c.fillStyle = i % 2 === 0 ? '#0D5EAF' : '#ffffff';
-      c.fillRect(x, y + i * sh, w, sh + 1);
-    }
-    const cw = sh * 5, ch = sh * 5;
-    c.fillStyle = '#0D5EAF'; c.fillRect(x, y, cw, ch);
-    c.fillStyle = '#ffffff';
-    c.fillRect(x + cw * 0.38, y, cw * 0.24, ch);
-    c.fillRect(x, y + ch * 0.38, cw, ch * 0.24);
-  }
-  // South Korea
-  else if (key === 'southkorea' || key === 'korea' || key === 'kr') {
-    c.fillStyle = '#ffffff'; c.fillRect(x, y, w, h);
-    const cx = x + w / 2, cy = y + h / 2, r = h * 0.23;
-    c.fillStyle = '#CD2E3A'; c.beginPath(); c.arc(cx, cy, r, Math.PI, 0); c.fill();
-    c.fillStyle = '#0047A0'; c.beginPath(); c.arc(cx, cy, r, 0, Math.PI); c.fill();
-    c.fillStyle = '#CD2E3A'; c.beginPath(); c.arc(cx - r / 2, cy, r / 2, 0, Math.PI * 2); c.fill();
-    c.fillStyle = '#0047A0'; c.beginPath(); c.arc(cx + r / 2, cy, r / 2, 0, Math.PI * 2); c.fill();
-    const bars = [[0.22, 0.24, -0.58], [0.78, 0.24, 0.58], [0.22, 0.76, 0.58], [0.78, 0.76, -0.58]];
-    c.fillStyle = '#000000';
-    bars.forEach(([bx, by, ang]) => {
-      c.save(); c.translate(x + w * bx, y + h * by); c.rotate(ang);
-      for (let k = -1; k <= 1; k++) c.fillRect(-w * 0.08, k * h * 0.045 - h * 0.014, w * 0.16, h * 0.026);
-      c.restore();
-    });
-  }
-  // Generic Fallback / Smart Auto Flag Generator
-  else {
-    // Generate an authentic procedural country flag based on name hash so ANY country renders a crisp flag!
-    let hash = 0;
-    for (let i = 0; i < key.length; i++) hash = ((hash << 5) - hash) + key.charCodeAt(i);
-    const palette = ['#E11D48', '#2563EB', '#16A34A', '#CA8A04', '#0F172A', '#ffffff', '#9333EA', '#0D9488'];
-    const c1 = palette[Math.abs(hash) % palette.length];
-    const c2 = palette[Math.abs(hash >> 3) % palette.length];
-    const c3 = palette[Math.abs(hash >> 6) % palette.length];
-    const style = Math.abs(hash) % 4;
-    if (style === 0) hStripes([c1, c2, c3]);
-    else if (style === 1) vStripes([c1, c2, c3]);
-    else if (style === 2) {
-      hStripes([c1, c2, c1]);
-      drawStar(c, x + w / 2, y + h / 2, 5, h * 0.2, h * 0.08, c3 === c1 ? '#ffffff' : c3);
-    } else {
-      drawNordic(c1, c2, c3);
-    }
-  }
 
-  // Subtle glossy flag border
-  c.strokeStyle = 'rgba(0,0,0,0.18)';
-  c.lineWidth = 4;
-  c.strokeRect(x, y, w, h);
-  c.restore();
-  return true;
-}
+      /* Built-in HD Vector Cartoon Fish Renderer (Goldfish, Clownfish, Shark, Dolphin, Pufferfish, etc.) */
+      function drawVectorFish(c, name, x, y, w, h) {
+        if (!name) return false;
+        const n = name.trim().toLowerCase();
+
+        c.save();
+        const cx = x + w / 2;
+        const cy = y + h / 2;
+        const maxW = w * 0.85;
+        const maxH = h * 0.78;
+        const s = Math.min(maxW / 520, maxH / 320);
+        c.translate(cx, cy);
+        c.scale(s, s);
+
+        function drawBubbles() {
+          const bubbles = [
+            { dx: -190, dy: -90, r: 14 },
+            { dx: -220, dy: -125, r: 9 },
+            { dx: -240, dy: -70, r: 6 },
+            { dx: 180, dy: -80, r: 12 },
+            { dx: 210, dy: -120, r: 8 }
+          ];
+          c.save();
+          bubbles.forEach(b => {
+            c.beginPath();
+            c.arc(b.dx, b.dy, b.r, 0, Math.PI * 2);
+            c.fillStyle = 'rgba(255, 255, 255, 0.45)';
+            c.fill();
+            c.lineWidth = 2;
+            c.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+            c.stroke();
+            c.beginPath();
+            c.arc(b.dx - b.r * 0.35, b.dy - b.r * 0.35, b.r * 0.28, 0, Math.PI * 2);
+            c.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            c.fill();
+          });
+          c.restore();
+        }
+
+        function drawEye(ex, ey, r, lookLeft = true) {
+          c.save();
+          c.beginPath();
+          c.arc(ex, ey, r, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.lineWidth = Math.max(2, r * 0.12);
+          c.strokeStyle = '#0f172a';
+          c.stroke();
+          const pupilR = r * 0.58;
+          const px = lookLeft ? ex - r * 0.2 : ex + r * 0.15;
+          const py = ey - r * 0.05;
+          c.beginPath();
+          c.arc(px, py, pupilR, 0, Math.PI * 2);
+          c.fillStyle = '#0f172a';
+          c.fill();
+          c.beginPath();
+          c.arc(px - pupilR * 0.35, py - pupilR * 0.35, pupilR * 0.45, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.beginPath();
+          c.arc(px + pupilR * 0.35, py + pupilR * 0.35, pupilR * 0.22, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.restore();
+        }
+
+        drawBubbles();
+
+        if (n.includes('clown') || n.includes('nemo')) {
+          // Clownfish / Nemo
+          c.beginPath();
+          c.moveTo(110, 0);
+          c.quadraticCurveTo(190, -75, 215, -60);
+          c.quadraticCurveTo(185, 0, 215, 60);
+          c.quadraticCurveTo(190, 75, 110, 0);
+          c.fillStyle = '#ea580c'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#0f172a'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-60, -65);
+          c.quadraticCurveTo(0, -120, 80, -65);
+          c.fillStyle = '#ea580c'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#0f172a'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-10, 0, 160, 85, 0, 0, Math.PI * 2);
+          c.fillStyle = '#f97316'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#0f172a'; c.stroke();
+
+          c.save();
+          c.clip();
+          [-90, -10, 95].forEach((sx, idx) => {
+            c.beginPath();
+            c.moveTo(sx - 20, -100);
+            c.quadraticCurveTo(sx + (idx === 1 ? 15 : 0), 0, sx - 20, 100);
+            c.lineTo(sx + 20, 100);
+            c.quadraticCurveTo(sx + 35 + (idx === 1 ? 15 : 0), 0, sx + 20, -100);
+            c.closePath();
+            c.fillStyle = '#ffffff'; c.fill();
+            c.lineWidth = 7; c.strokeStyle = '#0f172a'; c.stroke();
+          });
+          c.restore();
+
+          c.beginPath();
+          c.ellipse(-30, 25, 38, 22, 0.4, 0, Math.PI * 2);
+          c.fillStyle = '#fb923c'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#0f172a'; c.stroke();
+
+          c.beginPath();
+          c.arc(-145, 12, 16, 0.2, Math.PI * 0.7);
+          c.lineWidth = 4; c.strokeStyle = '#0f172a'; c.stroke();
+          drawEye(-105, -20, 22, true);
+
+        } else if (n.includes('gold')) {
+          // Goldfish
+          c.beginPath();
+          c.moveTo(90, 0);
+          c.bezierCurveTo(160, -120, 240, -90, 225, -20);
+          c.bezierCurveTo(180, 0, 190, 20, 235, 60);
+          c.bezierCurveTo(240, 110, 150, 100, 90, 0);
+          c.fillStyle = '#f97316'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#c2410c'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-40, -75);
+          c.quadraticCurveTo(20, -135, 75, -60);
+          c.fillStyle = '#ea580c'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#c2410c'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-15, 0, 140, 92, 0, 0, Math.PI * 2);
+          c.fillStyle = '#fb923c'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#c2410c'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-20, 45);
+          c.quadraticCurveTo(-10, 110, 40, 75);
+          c.fillStyle = 'rgba(251, 146, 60, 0.85)'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#c2410c'; c.stroke();
+
+          drawEye(-95, -22, 25, true);
+          c.beginPath();
+          c.arc(-140, 8, 14, 0.1, Math.PI * 0.6);
+          c.lineWidth = 4; c.strokeStyle = '#9a3412'; c.stroke();
+
+        } else if (n.includes('shark')) {
+          // Shark
+          c.beginPath();
+          c.moveTo(110, -5);
+          c.lineTo(210, -85);
+          c.quadraticCurveTo(180, -10, 160, 0);
+          c.quadraticCurveTo(190, 15, 200, 65);
+          c.lineTo(110, 15);
+          c.closePath();
+          c.fillStyle = '#475569'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#1e293b'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-20, -65);
+          c.quadraticCurveTo(0, -150, 45, -145);
+          c.quadraticCurveTo(35, -95, 65, -55);
+          c.closePath();
+          c.fillStyle = '#475569'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#1e293b'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-185, 10);
+          c.quadraticCurveTo(-70, -85, 120, -10);
+          c.quadraticCurveTo(30, 75, -150, 35);
+          c.closePath();
+          c.fillStyle = '#64748b'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#1e293b'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-185, 10);
+          c.quadraticCurveTo(-80, 20, 120, -10);
+          c.quadraticCurveTo(30, 75, -150, 35);
+          c.closePath();
+          c.fillStyle = '#f1f5f9'; c.fill();
+
+          c.beginPath();
+          c.moveTo(-45, 20);
+          c.lineTo(-90, 95);
+          c.quadraticCurveTo(-35, 80, -5, 30);
+          c.closePath();
+          c.fillStyle = '#475569'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#1e293b'; c.stroke();
+
+          [-10, 5, 20].forEach(gx => {
+            c.beginPath();
+            c.moveTo(gx, -15);
+            c.quadraticCurveTo(gx + 5, 5, gx, 25);
+            c.lineWidth = 3; c.strokeStyle = '#334155'; c.stroke();
+          });
+
+          drawEye(-135, -18, 16, true);
+
+        } else if (n.includes('dolphin')) {
+          // Dolphin
+          c.beginPath();
+          c.moveTo(110, 45);
+          c.quadraticCurveTo(180, 70, 205, 30);
+          c.quadraticCurveTo(175, 65, 155, 65);
+          c.quadraticCurveTo(180, 95, 195, 115);
+          c.quadraticCurveTo(145, 80, 110, 45);
+          c.fillStyle = '#0284c7'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#0369a1'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-15, -60);
+          c.quadraticCurveTo(10, -115, 45, -95);
+          c.quadraticCurveTo(30, -70, 40, -50);
+          c.fillStyle = '#0284c7'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#0369a1'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-185, -5);
+          c.quadraticCurveTo(-140, -25, -100, -20);
+          c.quadraticCurveTo(-20, -80, 70, -30);
+          c.quadraticCurveTo(115, 10, 120, 50);
+          c.quadraticCurveTo(40, 20, -70, 25);
+          c.quadraticCurveTo(-150, 20, -185, -5);
+          c.fillStyle = '#38bdf8'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#0284c7'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-140, 0);
+          c.quadraticCurveTo(-50, 10, 110, 45);
+          c.quadraticCurveTo(40, 20, -70, 25);
+          c.closePath();
+          c.fillStyle = '#f0f9ff'; c.fill();
+
+          c.beginPath();
+          c.moveTo(-45, 15);
+          c.quadraticCurveTo(-50, 70, -20, 60);
+          c.quadraticCurveTo(-25, 35, -5, 20);
+          c.fillStyle = '#0284c7'; c.fill();
+
+          drawEye(-115, -20, 18, true);
+          c.beginPath();
+          c.moveTo(-180, -3);
+          c.lineTo(-150, -5);
+          c.lineWidth = 3; c.strokeStyle = '#0369a1'; c.stroke();
+
+        } else if (n.includes('puffer') || n.includes('blow')) {
+          // Pufferfish
+          for (let a = 0; a < Math.PI * 2; a += Math.PI / 7) {
+            const sx = Math.cos(a) * 115;
+            const sy = Math.sin(a) * 98;
+            c.beginPath();
+            c.moveTo(sx, sy);
+            c.lineTo(sx + Math.cos(a) * 28, sy + Math.sin(a) * 28);
+            c.lineWidth = 5; c.strokeStyle = '#ca8a04'; c.stroke();
+          }
+
+          c.beginPath();
+          c.ellipse(0, 0, 118, 102, 0, 0, Math.PI * 2);
+          c.fillStyle = '#facc15'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#a16207'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(0, 32, 90, 56, 0, 0, Math.PI);
+          c.fillStyle = '#fef08a'; c.fill();
+
+          c.beginPath();
+          c.moveTo(110, 0);
+          c.lineTo(165, -35);
+          c.quadraticCurveTo(150, 0, 165, 35);
+          c.closePath();
+          c.fillStyle = '#eab308'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#a16207'; c.stroke();
+
+          drawEye(-45, -22, 25, true);
+          drawEye(22, -22, 22, true);
+
+          c.beginPath();
+          c.arc(-112, 10, 12, -0.6, Math.PI * 0.7);
+          c.fillStyle = '#f43f5e'; c.fill();
+          c.lineWidth = 3; c.strokeStyle = '#9f1239'; c.stroke();
+
+        } else if (n.includes('blue tang') || n.includes('dory')) {
+          // Blue Tang
+          c.beginPath();
+          c.moveTo(95, 0);
+          c.lineTo(185, -60);
+          c.quadraticCurveTo(160, 0, 185, 60);
+          c.closePath();
+          c.fillStyle = '#facc15'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#0f172a'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-10, 0, 150, 95, 0, 0, Math.PI * 2);
+          c.fillStyle = '#2563eb'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#0f172a'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-70, -45);
+          c.quadraticCurveTo(20, -90, 80, -25);
+          c.quadraticCurveTo(30, 20, 80, 50);
+          c.lineWidth = 26; c.strokeStyle = '#0f172a'; c.stroke();
+
+          drawEye(-95, -20, 22, true);
+          c.beginPath();
+          c.arc(-138, 12, 14, 0.2, Math.PI * 0.7);
+          c.lineWidth = 4; c.strokeStyle = '#0f172a'; c.stroke();
+
+        } else if (n.includes('catfish')) {
+          // Catfish
+          c.beginPath();
+          c.moveTo(95, 0);
+          c.lineTo(185, -55);
+          c.quadraticCurveTo(160, 0, 185, 55);
+          c.closePath();
+          c.fillStyle = '#64748b'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#334155'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-15, 0, 150, 80, 0, 0, Math.PI * 2);
+          c.fillStyle = '#94a3b8'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#334155'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-130, -5);
+          c.quadraticCurveTo(-160, -55, -95, -75);
+          c.moveTo(-130, 15);
+          c.quadraticCurveTo(-170, 65, -85, 80);
+          c.lineWidth = 5; c.strokeStyle = '#334155'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-95, -22, 20, true);
+          c.beginPath();
+          c.arc(-142, 10, 16, 0.1, Math.PI * 0.7);
+          c.lineWidth = 4; c.strokeStyle = '#334155'; c.stroke();
+
+        } else {
+          // Procedural Cartoon Fish
+          let hash = 0;
+          for (let i = 0; i < n.length; i++) hash = (hash * 31 + n.charCodeAt(i)) & 0xffffffff;
+          const colors = [
+            { main: '#06b6d4', dark: '#0891b2', fin: '#67e8f9' },
+            { main: '#10b981', dark: '#059669', fin: '#6ee7b7' },
+            { main: '#ec4899', dark: '#db2777', fin: '#f472b6' },
+            { main: '#8b5cf6', dark: '#7c3aed', fin: '#a78bfa' },
+            { main: '#f97316', dark: '#ea580c', fin: '#fdba74' },
+            { main: '#eab308', dark: '#ca8a04', fin: '#fde047' },
+            { main: '#3b82f6', dark: '#2563eb', fin: '#93c5fd' }
+          ];
+          const col = colors[Math.abs(hash) % colors.length];
+
+          c.beginPath();
+          c.moveTo(95, 0);
+          c.quadraticCurveTo(165, -70, 205, -55);
+          c.quadraticCurveTo(175, 0, 205, 55);
+          c.quadraticCurveTo(165, 70, 95, 0);
+          c.fillStyle = col.fin; c.fill();
+          c.lineWidth = 5; c.strokeStyle = col.dark; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-45, -70);
+          c.quadraticCurveTo(15, -125, 70, -60);
+          c.fillStyle = col.fin; c.fill();
+          c.lineWidth = 5; c.strokeStyle = col.dark; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-15, 0, 150, 88, 0, 0, Math.PI * 2);
+          c.fillStyle = col.main; c.fill();
+          c.lineWidth = 6; c.strokeStyle = col.dark; c.stroke();
+
+          [-30, 15, 60].forEach(sx => {
+            c.beginPath();
+            c.arc(sx, -15, 20, 0.2, Math.PI * 0.8);
+            c.arc(sx, 20, 20, 0.2, Math.PI * 0.8);
+            c.lineWidth = 3; c.strokeStyle = col.dark; c.stroke();
+          });
+
+          c.beginPath();
+          c.ellipse(-30, 25, 36, 18, 0.4, 0, Math.PI * 2);
+          c.fillStyle = col.fin; c.fill();
+          c.lineWidth = 4; c.strokeStyle = col.dark; c.stroke();
+
+          drawEye(-95, -20, 22, true);
+          c.beginPath();
+          c.arc(-140, 10, 15, 0.2, Math.PI * 0.7);
+          c.lineWidth = 4; c.strokeStyle = col.dark; c.stroke();
+        }
+
+        c.restore();
+        return true;
+      }
 
       /* ==========================================================================
          4. DOM REFERENCES
@@ -3041,6 +3463,10 @@
           }
         }
 
+        if (cat === 'fish') {
+          if (drawVectorFish(c, pair.left, boxX, boxY, boxW, boxH)) return;
+        }
+
         const emoji = ITEM_EMOJIS[pair.left.trim().toLowerCase()];
         if (emoji && cat !== 'letters') {
           const eSize = Math.round(Math.min(boxW, boxH) * 0.68);
@@ -3048,6 +3474,21 @@
           c.textAlign = 'center';
           c.textBaseline = 'middle';
           c.fillText(emoji, boxX + boxW / 2, boxY + boxH / 2 + eSize * 0.05);
+          return;
+        }
+
+        // In question / countdown phase for quiz items: NEVER leak the answer text inside the hero card!
+        if (inQuestion && cat !== 'letters') {
+          c.save();
+          c.font = '900 96px "Segoe UI Emoji",sans-serif';
+          c.fillStyle = '#f59e0b';
+          c.textAlign = 'center';
+          c.textBaseline = 'middle';
+          c.fillText('❓', boxX + boxW / 2, boxY + boxH / 2 - 20);
+          c.font = '800 32px "Segoe UI Rounded",sans-serif';
+          c.fillStyle = '#475569';
+          c.fillText('GUESS WHAT IT IS!', boxX + boxW / 2, boxY + boxH / 2 + 55);
+          c.restore();
           return;
         }
 
