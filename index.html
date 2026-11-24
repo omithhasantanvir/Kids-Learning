@@ -584,6 +584,7 @@
               <option value="animals">🐘 Animals</option>
               <option value="birds">🦜 Birds</option>
               <option value="fish">🐟 Fish</option>
+              <option value="vegetables">🥦 Vegetables</option>
             </select>
           </div>
           <div class="field">
@@ -1019,6 +1020,23 @@
           defaultLeft: 'Goldfish, Clownfish, Shark, Dolphin, Pufferfish',
           defaultRight: 'Goldfish, Clownfish, Shark, Dolphin, Pufferfish',
           hint: '🐟 Built-in colorful fish visuals & vector graphics included — or upload your own fish photos!'
+        },
+        vegetables: {
+          label: 'Vegetables',
+          icon: '🥦',
+          layout: 'quiz',
+          introText: 'Guess the Vegetable! 🥦',
+          hookSpeech: 'Can you guess these healthy vegetables?',
+          questionText: 'Which vegetable is this? 🥦',
+          revealDelay: 3,
+          secPerMatch: 5.0,
+          bgColor: '#f0fdf4',
+          lineColor: '#16a34a',
+          musicTrack: 'quiz',
+          musicTiming: 'guessOnly',
+          defaultLeft: 'Carrot, Broccoli, Tomato, Potato, Corn',
+          defaultRight: 'Carrot, Broccoli, Tomato, Potato, Corn',
+          hint: '🥦 Built-in colorful vegetable visuals & vector graphics included — or upload your own vegetable photos!'
         }
       };
 
@@ -1053,7 +1071,14 @@
         carp: '🐟', tilapia: '🐟', rohu: '🐟', ilish: '🐟', hilsha: '🐟',
         'blue tang': '🐠', ray: '🐟', manta: '🐟', stingray: '🐟', trout: '🐟',
         bass: '🐟', cod: '🐟', mackerel: '🐟', sardine: '🐟', anchovy: '🐟',
-        nemo: '🐠', dory: '🐠', 'flying fish': '🐟', anglerfish: '🐟'
+        nemo: '🐠', dory: '🐠', 'flying fish': '🐟', anglerfish: '🐟',
+        // Vegetables
+        carrot: '🥕', broccoli: '🥦', tomato: '🍅', potato: '🥔', corn: '🌽',
+        eggplant: '🍆', aubergine: '🍆', brinjal: '🍆', cucumber: '🥒',
+        pepper: '🫑', 'bell pepper': '🫑', capsicum: '🫑', chili: '🌶️', 'hot pepper': '🌶️',
+        onion: '🧅', garlic: '🧄', mushroom: '🍄', pea: '🫛', peas: '🫛',
+        lettuce: '🥬', cabbage: '🥬', spinach: '🥬', radish: '🥕', beet: '🍠', beetroot: '🍠',
+        pumpkin: '🎃', 'sweet potato': '🍠', ginger: '🫚', olive: '🫒'
       };
 
       /* ==========================================================================
@@ -2086,6 +2111,339 @@
           c.beginPath();
           c.arc(-140, 10, 15, 0.2, Math.PI * 0.7);
           c.lineWidth = 4; c.strokeStyle = col.dark; c.stroke();
+        }
+
+        c.restore();
+        return true;
+      }
+
+      /* Built-in HD Vector Vegetable Renderer (Carrot, Broccoli, Tomato, Potato, Corn, Eggplant, Pumpkin, etc.) */
+      function drawVectorVegetable(c, name, x, y, w, h) {
+        if (!name) return false;
+        const n = name.trim().toLowerCase();
+
+        c.save();
+        const cx = x + w / 2;
+        const cy = y + h / 2;
+        const maxW = w * 0.85;
+        const maxH = h * 0.78;
+        const s = Math.min(maxW / 520, maxH / 320);
+        c.translate(cx, cy);
+        c.scale(s, s);
+
+        function drawSparkles() {
+          const sparkles = [
+            { dx: -180, dy: -80, r: 12 },
+            { dx: -210, dy: 60, r: 8 },
+            { dx: 180, dy: -90, r: 14 },
+            { dx: 200, dy: 50, r: 10 }
+          ];
+          c.save();
+          sparkles.forEach(sp => {
+            c.save();
+            c.translate(sp.dx, sp.dy);
+            c.fillStyle = '#facc15';
+            c.beginPath();
+            for (let i = 0; i < 8; i++) {
+              const a = (i * Math.PI) / 4;
+              const r2 = i % 2 === 0 ? sp.r : sp.r * 0.35;
+              if (i === 0) c.moveTo(Math.cos(a) * r2, Math.sin(a) * r2);
+              else c.lineTo(Math.cos(a) * r2, Math.sin(a) * r2);
+            }
+            c.closePath();
+            c.fill();
+            c.restore();
+          });
+          c.restore();
+        }
+
+        function drawEye(ex, ey, r, lookLeft = false) {
+          c.save();
+          c.beginPath();
+          c.arc(ex, ey, r, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.lineWidth = Math.max(2, r * 0.12);
+          c.strokeStyle = '#0f172a';
+          c.stroke();
+          const pupilR = r * 0.58;
+          const px = lookLeft ? ex - r * 0.15 : ex + r * 0.15;
+          const py = ey - r * 0.05;
+          c.beginPath();
+          c.arc(px, py, pupilR, 0, Math.PI * 2);
+          c.fillStyle = '#0f172a';
+          c.fill();
+          c.beginPath();
+          c.arc(px - pupilR * 0.35, py - pupilR * 0.35, pupilR * 0.45, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.beginPath();
+          c.arc(px + pupilR * 0.35, py + pupilR * 0.35, pupilR * 0.22, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.restore();
+        }
+
+        drawSparkles();
+
+        if (n.includes('carrot')) {
+          // Carrot
+          c.beginPath();
+          c.moveTo(0, -50);
+          c.quadraticCurveTo(-45, -135, -80, -145);
+          c.quadraticCurveTo(-30, -100, -10, -55);
+          c.quadraticCurveTo(0, -155, 10, -160);
+          c.quadraticCurveTo(20, -110, 15, -55);
+          c.quadraticCurveTo(55, -135, 85, -140);
+          c.quadraticCurveTo(35, -95, 0, -50);
+          c.fillStyle = '#22c55e'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#15803d'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-75, -50);
+          c.quadraticCurveTo(-85, 10, 0, 135);
+          c.quadraticCurveTo(85, 10, 75, -50);
+          c.quadraticCurveTo(0, -65, -75, -50);
+          c.fillStyle = '#f97316'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#c2410c'; c.stroke();
+
+          [[-45, -20, 20], [25, 10, 25], [-35, 45, 18], [15, 75, 16]].forEach(([rx, ry, rw]) => {
+            c.beginPath();
+            c.moveTo(rx - rw, ry);
+            c.lineTo(rx + rw, ry);
+            c.lineWidth = 4; c.strokeStyle = '#ea580c'; c.lineCap = 'round'; c.stroke();
+          });
+
+          drawEye(-26, -10, 14, false);
+          drawEye(26, -10, 14, false);
+          c.beginPath();
+          c.arc(0, 12, 10, 0.1, Math.PI - 0.1);
+          c.lineWidth = 3; c.strokeStyle = '#9a3412'; c.stroke();
+
+        } else if (n.includes('broccoli')) {
+          // Broccoli
+          c.beginPath();
+          c.moveTo(-35, 10);
+          c.quadraticCurveTo(-45, 90, -30, 125);
+          c.lineTo(30, 125);
+          c.quadraticCurveTo(45, 90, 35, 10);
+          c.closePath();
+          c.fillStyle = '#86efac'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#16a34a'; c.stroke();
+
+          const florets = [
+            { cx: -80, cy: -30, r: 52 },
+            { cx: 80, cy: -30, r: 52 },
+            { cx: -50, cy: -85, r: 56 },
+            { cx: 50, cy: -85, r: 56 },
+            { cx: 0, cy: -115, r: 62 },
+            { cx: 0, cy: -40, r: 68 }
+          ];
+          florets.forEach(f => {
+            c.beginPath();
+            c.arc(f.cx, f.cy, f.r, 0, Math.PI * 2);
+            c.fillStyle = '#15803d'; c.fill();
+            c.lineWidth = 5; c.strokeStyle = '#14532d'; c.stroke();
+          });
+
+          florets.forEach(f => {
+            c.beginPath();
+            c.arc(f.cx - 10, f.cy - 10, f.r * 0.45, 0, Math.PI * 2);
+            c.fillStyle = '#16a34a'; c.fill();
+          });
+
+          drawEye(-18, 45, 12, false);
+          drawEye(18, 45, 12, false);
+          c.beginPath();
+          c.arc(0, 65, 8, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#14532d'; c.stroke();
+
+        } else if (n.includes('tomato')) {
+          // Tomato
+          c.beginPath();
+          c.ellipse(0, 15, 115, 98, 0, 0, Math.PI * 2);
+          c.fillStyle = '#ef4444'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#b91c1c'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-45, -30, 35, 18, -0.6, 0, Math.PI * 2);
+          c.fillStyle = 'rgba(255, 255, 255, 0.45)'; c.fill();
+
+          c.beginPath();
+          c.moveTo(0, -78);
+          c.quadraticCurveTo(15, -125, 25, -135);
+          c.lineTo(15, -135);
+          c.quadraticCurveTo(5, -115, -8, -80);
+          c.fillStyle = '#15803d'; c.fill();
+
+          for (let a = 0; a < Math.PI * 2; a += (Math.PI * 2) / 5) {
+            c.beginPath();
+            c.moveTo(0, -75);
+            c.lineTo(Math.cos(a) * 45, -75 + Math.sin(a) * 32);
+            c.lineTo(Math.cos(a + 0.3) * 15, -75 + Math.sin(a + 0.3) * 10);
+            c.fillStyle = '#16a34a'; c.fill();
+          }
+
+          drawEye(-35, 10, 16, false);
+          drawEye(35, 10, 16, false);
+          c.beginPath();
+          c.arc(0, 38, 14, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#991b1b'; c.stroke();
+
+        } else if (n.includes('potato')) {
+          // Potato
+          c.beginPath();
+          c.moveTo(-100, -20);
+          c.quadraticCurveTo(-115, 60, -40, 85);
+          c.quadraticCurveTo(60, 95, 105, 40);
+          c.quadraticCurveTo(120, -50, 40, -75);
+          c.quadraticCurveTo(-60, -85, -100, -20);
+          c.closePath();
+          c.fillStyle = '#d97706'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#92400e'; c.stroke();
+
+          [[-60, -35], [55, -40], [-45, 45], [45, 50], [0, 65]].forEach(([dx, dy]) => {
+            c.beginPath();
+            c.arc(dx, dy, 7, 0.2, Math.PI);
+            c.lineWidth = 3; c.strokeStyle = '#78350f'; c.stroke();
+          });
+
+          drawEye(-30, -5, 15, false);
+          drawEye(30, -5, 15, false);
+          c.beginPath();
+          c.arc(0, 22, 12, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#78350f'; c.stroke();
+
+        } else if (n.includes('corn')) {
+          // Corn
+          c.beginPath();
+          c.moveTo(-80, 80);
+          c.quadraticCurveTo(-110, -30, -60, -90);
+          c.quadraticCurveTo(-50, 20, 0, 95);
+          c.fillStyle = '#4ade80'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#16a34a'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(80, 80);
+          c.quadraticCurveTo(110, -30, 60, -90);
+          c.quadraticCurveTo(50, 20, 0, 95);
+          c.fillStyle = '#4ade80'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#16a34a'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(0, -10, 56, 115, 0, 0, Math.PI * 2);
+          c.fillStyle = '#facc15'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#ca8a04'; c.stroke();
+
+          for (let ky = -95; ky <= 75; ky += 24) {
+            for (let kx = -36; kx <= 36; kx += 24) {
+              c.beginPath();
+              c.arc(kx, ky, 8, 0, Math.PI * 2);
+              c.fillStyle = '#fde047'; c.fill();
+              c.lineWidth = 2; c.strokeStyle = '#eab308'; c.stroke();
+            }
+          }
+
+          drawEye(-18, -15, 12, false);
+          drawEye(18, -15, 12, false);
+          c.beginPath();
+          c.arc(0, 8, 9, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#a16207'; c.stroke();
+
+        } else if (n.includes('eggplant') || n.includes('brinjal') || n.includes('aubergine')) {
+          // Eggplant
+          c.beginPath();
+          c.moveTo(-20, -50);
+          c.quadraticCurveTo(-85, 20, -65, 80);
+          c.quadraticCurveTo(-20, 125, 45, 110);
+          c.quadraticCurveTo(95, 70, 45, -30);
+          c.quadraticCurveTo(20, -55, -20, -50);
+          c.fillStyle = '#7e22ce'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#581c87'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-30, 40, 45, 16, 1.1, 0, Math.PI * 2);
+          c.fillStyle = 'rgba(255, 255, 255, 0.35)'; c.fill();
+
+          c.beginPath();
+          c.moveTo(0, -65);
+          c.quadraticCurveTo(15, -115, 20, -125);
+          c.lineTo(10, -125);
+          c.quadraticCurveTo(0, -100, -15, -68);
+          c.fillStyle = '#15803d'; c.fill();
+
+          [-45, 0, 45].forEach(ang => {
+            c.beginPath();
+            c.moveTo(0, -60);
+            c.lineTo(ang, -40);
+            c.lineTo(ang * 0.4, -25);
+            c.closePath();
+            c.fillStyle = '#16a34a'; c.fill();
+          });
+
+          drawEye(-15, 20, 14, false);
+          drawEye(25, 15, 14, false);
+          c.beginPath();
+          c.arc(5, 42, 10, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#3b0764'; c.stroke();
+
+        } else if (n.includes('pumpkin')) {
+          // Pumpkin
+          c.beginPath();
+          c.moveTo(-10, -60);
+          c.quadraticCurveTo(-15, -110, 15, -120);
+          c.lineTo(25, -110);
+          c.quadraticCurveTo(5, -95, 10, -60);
+          c.fillStyle = '#78350f'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#451a03'; c.stroke();
+
+          [-80, 80, -45, 45, 0].forEach(px => {
+            c.beginPath();
+            c.ellipse(px, 15, 52, 92, 0, 0, Math.PI * 2);
+            c.fillStyle = '#f97316'; c.fill();
+            c.lineWidth = 5; c.strokeStyle = '#c2410c'; c.stroke();
+          });
+
+          drawEye(-35, 10, 16, false);
+          drawEye(35, 10, 16, false);
+          c.beginPath();
+          c.arc(0, 38, 14, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#9a3412'; c.stroke();
+
+        } else {
+          // Procedural Garden Vegetable
+          let hash = 0;
+          for (let i = 0; i < n.length; i++) hash = (hash * 31 + n.charCodeAt(i)) & 0xffffffff;
+          const colors = [
+            { main: '#16a34a', dark: '#14532d', leaf: '#4ade80' },
+            { main: '#dc2626', dark: '#991b1b', leaf: '#16a34a' },
+            { main: '#9333ea', dark: '#6b21a8', leaf: '#22c55e' },
+            { main: '#ea580c', dark: '#9a3412', leaf: '#15803d' },
+            { main: '#ca8a04', dark: '#713f12', leaf: '#16a34a' }
+          ];
+          const col = colors[Math.abs(hash) % colors.length];
+
+          c.beginPath();
+          c.moveTo(0, -45);
+          c.quadraticCurveTo(-45, -120, -70, -110);
+          c.quadraticCurveTo(-30, -75, 0, -45);
+          c.quadraticCurveTo(0, -135, 20, -130);
+          c.quadraticCurveTo(15, -80, 0, -45);
+          c.quadraticCurveTo(45, -115, 70, -100);
+          c.quadraticCurveTo(30, -70, 0, -45);
+          c.fillStyle = col.leaf; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#14532d'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(0, 25, 95, 88, 0, 0, Math.PI * 2);
+          c.fillStyle = col.main; c.fill();
+          c.lineWidth = 6; c.strokeStyle = col.dark; c.stroke();
+
+          drawEye(-28, 18, 15, false);
+          drawEye(28, 18, 15, false);
+          c.beginPath();
+          c.arc(0, 45, 12, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = col.dark; c.stroke();
         }
 
         c.restore();
@@ -3465,6 +3823,10 @@
 
         if (cat === 'fish') {
           if (drawVectorFish(c, pair.left, boxX, boxY, boxW, boxH)) return;
+        }
+
+        if (cat === 'vegetables') {
+          if (drawVectorVegetable(c, pair.left, boxX, boxY, boxW, boxH)) return;
         }
 
         const emoji = ITEM_EMOJIS[pair.left.trim().toLowerCase()];

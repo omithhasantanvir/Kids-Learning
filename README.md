@@ -11,7 +11,8 @@ An all-in-one, browser-based **YouTube Shorts & TikTok Video Generator** designe
   - 🧍 **Human Body Parts (3D Anatomy):** Dual-view (Front / Back) full anatomy model with targeted pulse markers and labels.
   - 🐟 **Fish & Sea Creatures:** High-definition vector graphics and guessing quiz for Goldfish, Clownfish, Shark, Dolphin, Pufferfish, Blue Tang, Catfish, and marine life.
   - 🦁 **Animals & Birds:** Rich procedural graphics for domestic & wild animals.
-  - 🍎 **Fruits & Vegetables:** Colorful, child-friendly illustrations.
+  - 🥦 **Healthy Vegetables:** High-definition vector graphics and guessing quiz for Carrot, Broccoli, Tomato, Potato, Corn, Eggplant, Pumpkin, and fresh garden vegetables.
+  - 🍎 **Fresh Fruits:** Colorful, child-friendly illustrations and quizzes.
   - 🌸 **Flowers, Vehicles, Shapes & Colors:** Engaging visual quizzes.
 
 - **⏱️ High-Retention Fast-Paced Format:**
