@@ -14,6 +14,7 @@ An all-in-one, browser-based **YouTube Shorts & TikTok Video Generator** designe
   - 🥦 **Healthy Vegetables:** High-definition vector graphics and guessing quiz for Carrot, Broccoli, Tomato, Potato, Corn, Eggplant, Pumpkin, and fresh garden vegetables.
   - 🍎 **Fresh Fruits:** Colorful, child-friendly illustrations and quizzes.
   - 🔷 **Geometric Shapes:** High-definition vector graphics and guessing quiz for Circle, Square, Triangle, Star, Heart, Diamond, Hexagon, Crescent, Oval, Rectangle with cute cartoon eyes.
+  - 🎒 **Everyday Items:** High-definition vector graphics and guessing quiz for Clock, Pencil, Cup, Book, Umbrella, Backpack, Scissors, Glasses, Phone, Key, Toothbrush, Water Bottle.
   - 🌸 **Flowers, Vehicles & Colors:** Engaging visual quizzes.
 
 - **⏱️ High-Retention Fast-Paced Format:**
