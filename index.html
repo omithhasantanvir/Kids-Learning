@@ -585,6 +585,7 @@
               <option value="birds">🦜 Birds</option>
               <option value="fish">🐟 Fish</option>
               <option value="vegetables">🥦 Vegetables</option>
+              <option value="shapes">🔷 Shapes</option>
             </select>
           </div>
           <div class="field">
@@ -1037,6 +1038,23 @@
           defaultLeft: 'Carrot, Broccoli, Tomato, Potato, Corn',
           defaultRight: 'Carrot, Broccoli, Tomato, Potato, Corn',
           hint: '🥦 Built-in colorful vegetable visuals & vector graphics included — or upload your own vegetable photos!'
+        },
+        shapes: {
+          label: 'Shapes',
+          icon: '🔷',
+          layout: 'quiz',
+          introText: 'Guess the Shape! 🔷',
+          hookSpeech: 'Can you guess these geometric shapes?',
+          questionText: 'Which shape is this? 🔷',
+          revealDelay: 3,
+          secPerMatch: 5.0,
+          bgColor: '#fdf4ff',
+          lineColor: '#c026d3',
+          musicTrack: 'quiz',
+          musicTiming: 'guessOnly',
+          defaultLeft: 'Circle, Square, Triangle, Star, Heart, Diamond, Hexagon, Crescent',
+          defaultRight: 'Circle, Square, Triangle, Star, Heart, Diamond, Hexagon, Crescent',
+          hint: '🔷 Built-in colorful 2D geometric shapes with cute cartoon eyes & styles included!'
         }
       };
 
@@ -1078,7 +1096,12 @@
         pepper: '🫑', 'bell pepper': '🫑', capsicum: '🫑', chili: '🌶️', 'hot pepper': '🌶️',
         onion: '🧅', garlic: '🧄', mushroom: '🍄', pea: '🫛', peas: '🫛',
         lettuce: '🥬', cabbage: '🥬', spinach: '🥬', radish: '🥕', beet: '🍠', beetroot: '🍠',
-        pumpkin: '🎃', 'sweet potato': '🍠', ginger: '🫚', olive: '🫒'
+        pumpkin: '🎃', 'sweet potato': '🍠', ginger: '🫚', olive: '🫒',
+        // Shapes & Geometry
+        circle: '🔴', square: '🟦', triangle: '🔺', star: '⭐', heart: '❤️',
+        diamond: '💎', rhombus: '🔷', hexagon: '⬡', pentagon: '⬠', octagon: '🛑',
+        crescent: '🌙', moon: '🌙', oval: '⬭', ellipse: '⬭', rectangle: '▭',
+        cross: '➕', cube: '🧊', cylinder: '🛢️', cone: '🍦', sphere: '🔮'
       };
 
       /* ==========================================================================
@@ -2444,6 +2467,317 @@
           c.beginPath();
           c.arc(0, 45, 12, 0.2, Math.PI - 0.2);
           c.lineWidth = 3; c.strokeStyle = col.dark; c.stroke();
+        }
+
+        c.restore();
+        return true;
+      }
+
+      /* Built-in HD Vector Geometric Shapes Renderer (Circle, Square, Triangle, Star, Heart, Diamond, etc.) */
+      function drawVectorShape(c, name, x, y, w, h) {
+        if (!name) return false;
+        const n = name.trim().toLowerCase();
+
+        c.save();
+        const cx = x + w / 2;
+        const cy = y + h / 2;
+        const maxW = w * 0.85;
+        const maxH = h * 0.78;
+        const s = Math.min(maxW / 520, maxH / 320);
+        c.translate(cx, cy);
+        c.scale(s, s);
+
+        function drawSparkles() {
+          const sparkles = [
+            { dx: -190, dy: -90, r: 14 },
+            { dx: -220, dy: 70, r: 9 },
+            { dx: 190, dy: -85, r: 13 },
+            { dx: 210, dy: 65, r: 10 }
+          ];
+          c.save();
+          sparkles.forEach(sp => {
+            c.save();
+            c.translate(sp.dx, sp.dy);
+            c.fillStyle = '#facc15';
+            c.beginPath();
+            for (let i = 0; i < 8; i++) {
+              const a = (i * Math.PI) / 4;
+              const r2 = i % 2 === 0 ? sp.r : sp.r * 0.35;
+              if (i === 0) c.moveTo(Math.cos(a) * r2, Math.sin(a) * r2);
+              else c.lineTo(Math.cos(a) * r2, Math.sin(a) * r2);
+            }
+            c.closePath();
+            c.fill();
+            c.restore();
+          });
+          c.restore();
+        }
+
+        function drawEye(ex, ey, r, lookLeft = false) {
+          c.save();
+          c.beginPath();
+          c.arc(ex, ey, r, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.lineWidth = Math.max(2, r * 0.12);
+          c.strokeStyle = '#0f172a';
+          c.stroke();
+          const pupilR = r * 0.58;
+          const px = lookLeft ? ex - r * 0.15 : ex + r * 0.15;
+          const py = ey - r * 0.05;
+          c.beginPath();
+          c.arc(px, py, pupilR, 0, Math.PI * 2);
+          c.fillStyle = '#0f172a';
+          c.fill();
+          c.beginPath();
+          c.arc(px - pupilR * 0.35, py - pupilR * 0.35, pupilR * 0.45, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.beginPath();
+          c.arc(px + pupilR * 0.35, py + pupilR * 0.35, pupilR * 0.22, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.restore();
+        }
+
+        drawSparkles();
+
+        if (n.includes('circle')) {
+          // Circle
+          c.beginPath();
+          c.arc(0, 0, 115, 0, Math.PI * 2);
+          c.fillStyle = '#ef4444'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#b91c1c'; c.stroke();
+
+          c.beginPath();
+          c.arc(-40, -40, 48, -Math.PI * 0.7, -Math.PI * 0.1);
+          c.lineWidth = 14; c.strokeStyle = 'rgba(255, 255, 255, 0.55)'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-35, -5, 16, false);
+          drawEye(35, -5, 16, false);
+          c.beginPath();
+          c.arc(0, 26, 15, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#7f1d1d'; c.stroke();
+
+        } else if (n.includes('square')) {
+          // Square
+          const sz = 110;
+          c.beginPath();
+          roundRectPath(c, -sz, -sz, sz * 2, sz * 2, 28);
+          c.fillStyle = '#3b82f6'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#1d4ed8'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-sz + 25, -sz + 25);
+          c.lineTo(-sz + 80, -sz + 25);
+          c.lineWidth = 12; c.strokeStyle = 'rgba(255, 255, 255, 0.55)'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-35, -5, 16, false);
+          drawEye(35, -5, 16, false);
+          c.beginPath();
+          c.arc(0, 26, 15, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#1e3a8a'; c.stroke();
+
+        } else if (n.includes('triangle')) {
+          // Triangle
+          c.beginPath();
+          c.moveTo(0, -125);
+          c.lineTo(135, 105);
+          c.lineTo(-135, 105);
+          c.closePath();
+          c.fillStyle = '#facc15'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#ca8a04'; c.lineJoin = 'round'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-20, -50);
+          c.lineTo(-75, 45);
+          c.lineWidth = 10; c.strokeStyle = 'rgba(255, 255, 255, 0.6)'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-32, 18, 14, false);
+          drawEye(32, 18, 14, false);
+          c.beginPath();
+          c.arc(0, 42, 13, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#713f12'; c.stroke();
+
+        } else if (n.includes('star')) {
+          // Star
+          c.beginPath();
+          let rot = (Math.PI / 2) * 3;
+          const step = Math.PI / 5;
+          const outerR = 135, innerR = 60;
+          c.moveTo(0, -outerR);
+          for (let i = 0; i < 5; i++) {
+            c.lineTo(Math.cos(rot) * outerR, Math.sin(rot) * outerR);
+            rot += step;
+            c.lineTo(Math.cos(rot) * innerR, Math.sin(rot) * innerR);
+            rot += step;
+          }
+          c.closePath();
+          c.fillStyle = '#fde047'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#ca8a04'; c.lineJoin = 'round'; c.stroke();
+
+          drawEye(-26, -5, 14, false);
+          drawEye(26, -5, 14, false);
+          c.beginPath();
+          c.arc(0, 20, 12, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#713f12'; c.stroke();
+
+        } else if (n.includes('heart')) {
+          // Heart
+          c.beginPath();
+          c.moveTo(0, 35);
+          c.bezierCurveTo(-130, -75, -130, -135, 0, -45);
+          c.bezierCurveTo(130, -135, 130, -75, 0, 35);
+          c.closePath();
+          c.fillStyle = '#ec4899'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#be185d'; c.lineJoin = 'round'; c.stroke();
+
+          c.beginPath();
+          c.arc(-55, -80, 22, -Math.PI * 0.7, -Math.PI * 0.1);
+          c.lineWidth = 10; c.strokeStyle = 'rgba(255, 255, 255, 0.6)'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-32, -50, 14, false);
+          drawEye(32, -50, 14, false);
+          c.beginPath();
+          c.arc(0, -25, 12, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#831843'; c.stroke();
+
+        } else if (n.includes('diamond') || n.includes('rhombus')) {
+          // Diamond
+          c.beginPath();
+          c.moveTo(0, -125);
+          c.lineTo(110, 0);
+          c.lineTo(0, 125);
+          c.lineTo(-110, 0);
+          c.closePath();
+          c.fillStyle = '#06b6d4'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#0891b2'; c.lineJoin = 'round'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-35, -75);
+          c.lineTo(-80, -15);
+          c.lineWidth = 10; c.strokeStyle = 'rgba(255, 255, 255, 0.6)'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-30, -5, 14, false);
+          drawEye(30, -5, 14, false);
+          c.beginPath();
+          c.arc(0, 22, 13, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#155e75'; c.stroke();
+
+        } else if (n.includes('hexagon')) {
+          // Hexagon
+          c.beginPath();
+          for (let i = 0; i < 6; i++) {
+            const a = (i * Math.PI) / 3;
+            const hx = Math.cos(a) * 120;
+            const hy = Math.sin(a) * 120;
+            if (i === 0) c.moveTo(hx, hy);
+            else c.lineTo(hx, hy);
+          }
+          c.closePath();
+          c.fillStyle = '#8b5cf6'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#6d28d9'; c.lineJoin = 'round'; c.stroke();
+
+          drawEye(-35, -8, 15, false);
+          drawEye(35, -8, 15, false);
+          c.beginPath();
+          c.arc(0, 22, 14, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#4c1d95'; c.stroke();
+
+        } else if (n.includes('pentagon')) {
+          // Pentagon
+          c.beginPath();
+          for (let i = 0; i < 5; i++) {
+            const a = (i * 2 * Math.PI) / 5 - Math.PI / 2;
+            const px = Math.cos(a) * 125;
+            const py = Math.sin(a) * 125;
+            if (i === 0) c.moveTo(px, py);
+            else c.lineTo(px, py);
+          }
+          c.closePath();
+          c.fillStyle = '#10b981'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#047857'; c.lineJoin = 'round'; c.stroke();
+
+          drawEye(-32, 5, 15, false);
+          drawEye(32, 5, 15, false);
+          c.beginPath();
+          c.arc(0, 35, 14, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#064e3b'; c.stroke();
+
+        } else if (n.includes('crescent') || n.includes('moon')) {
+          // Crescent Moon
+          c.beginPath();
+          c.arc(0, 0, 115, -Math.PI * 0.45, Math.PI * 0.55);
+          c.quadraticCurveTo(35, 0, 25, -112);
+          c.closePath();
+          c.fillStyle = '#fbbf24'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#d97706'; c.lineJoin = 'round'; c.stroke();
+
+          drawEye(-20, -10, 15, true);
+          c.beginPath();
+          c.arc(-10, 22, 13, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#78350f'; c.stroke();
+
+        } else if (n.includes('oval') || n.includes('ellipse')) {
+          // Oval
+          c.beginPath();
+          c.ellipse(0, 0, 140, 95, 0, 0, Math.PI * 2);
+          c.fillStyle = '#10b981'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#059669'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(-45, -35, 45, 18, -0.4, 0, Math.PI * 2);
+          c.fillStyle = 'rgba(255, 255, 255, 0.45)'; c.fill();
+
+          drawEye(-35, -5, 16, false);
+          drawEye(35, -5, 16, false);
+          c.beginPath();
+          c.arc(0, 25, 15, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#064e3b'; c.stroke();
+
+        } else if (n.includes('rectangle')) {
+          // Rectangle
+          const rw = 150, rh = 95;
+          c.beginPath();
+          roundRectPath(c, -rw, -rh, rw * 2, rh * 2, 26);
+          c.fillStyle = '#f97316'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#ea580c'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-rw + 35, -rh + 22);
+          c.lineTo(-rw + 110, -rh + 22);
+          c.lineWidth = 12; c.strokeStyle = 'rgba(255, 255, 255, 0.55)'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-40, -5, 16, false);
+          drawEye(40, -5, 16, false);
+          c.beginPath();
+          c.arc(0, 25, 15, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = '#7c2d12'; c.stroke();
+
+        } else {
+          // Procedural Geometric Shape
+          let hash = 0;
+          for (let i = 0; i < n.length; i++) hash = (hash * 31 + n.charCodeAt(i)) & 0xffffffff;
+          const colors = [
+            { main: '#ec4899', dark: '#be185d' },
+            { main: '#8b5cf6', dark: '#6d28d9' },
+            { main: '#06b6d4', dark: '#0891b2' },
+            { main: '#10b981', dark: '#059669' },
+            { main: '#f97316', dark: '#ea580c' },
+            { main: '#eab308', dark: '#ca8a04' }
+          ];
+          const col = colors[Math.abs(hash) % colors.length];
+
+          c.beginPath();
+          c.ellipse(0, 0, 125, 105, 0, 0, Math.PI * 2);
+          c.fillStyle = col.main; c.fill();
+          c.lineWidth = 7; c.strokeStyle = col.dark; c.stroke();
+
+          drawEye(-35, -5, 16, false);
+          drawEye(35, -5, 16, false);
+          c.beginPath();
+          c.arc(0, 25, 15, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = col.dark; c.stroke();
         }
 
         c.restore();
@@ -3827,6 +4161,10 @@
 
         if (cat === 'vegetables') {
           if (drawVectorVegetable(c, pair.left, boxX, boxY, boxW, boxH)) return;
+        }
+
+        if (cat === 'shapes') {
+          if (drawVectorShape(c, pair.left, boxX, boxY, boxW, boxH)) return;
         }
 
         const emoji = ITEM_EMOJIS[pair.left.trim().toLowerCase()];
