@@ -16,7 +16,8 @@ An all-in-one, browser-based **YouTube Shorts & TikTok Video Generator** designe
   - 🔷 **Geometric Shapes:** High-definition vector graphics and guessing quiz for Circle, Square, Triangle, Star, Heart, Diamond, Hexagon, Crescent, Oval, Rectangle with cute cartoon eyes.
   - 🎒 **Everyday Items:** High-definition vector graphics and guessing quiz for Clock, Pencil, Cup, Book, Umbrella, Backpack, Scissors, Glasses, Phone, Key, Toothbrush, Water Bottle.
   - 🚗 **Vehicles & Transport:** High-definition vector graphics and guessing quiz for Car, Bus, Airplane, Train, Bicycle, Helicopter, Ship, Rocket with animated details.
-  - 🌸 **Flowers & Colors:** Engaging visual quizzes.
+  - 🎨 **Colors & Rainbow:** High-definition glossy paint splat vector graphics and guessing quiz for Red, Blue, Green, Yellow, Orange, Purple, Pink, Rainbow, Gold, etc.
+  - 🌸 **Flowers & Plants:** Engaging visual quizzes.
 
 - **⏱️ High-Retention Fast-Paced Format:**
   - **Quick Hook Question:** Pops up within the first second with sound effects.
