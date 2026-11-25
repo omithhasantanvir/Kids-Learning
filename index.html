@@ -587,6 +587,7 @@
               <option value="vegetables">🥦 Vegetables</option>
               <option value="shapes">🔷 Shapes</option>
               <option value="everyday">🎒 Everyday Items</option>
+              <option value="vehicles">🚗 Vehicles</option>
             </select>
           </div>
           <div class="field">
@@ -1073,6 +1074,23 @@
           defaultLeft: 'Clock, Pencil, Cup, Book, Umbrella, Backpack, Scissors, Glasses',
           defaultRight: 'Clock, Pencil, Cup, Book, Umbrella, Backpack, Scissors, Glasses',
           hint: '🎒 Built-in colorful everyday items with cute HD vector graphics included — or upload your own photos!'
+        },
+        vehicles: {
+          label: 'Vehicles',
+          icon: '🚗',
+          layout: 'quiz',
+          introText: 'Guess the Vehicle! 🚗',
+          hookSpeech: 'Can you guess these cool vehicles?',
+          questionText: 'Which vehicle is this? 🚗',
+          revealDelay: 3,
+          secPerMatch: 5.0,
+          bgColor: '#eff6ff',
+          lineColor: '#2563eb',
+          musicTrack: 'quiz',
+          musicTiming: 'guessOnly',
+          defaultLeft: 'Car, Bus, Airplane, Train, Bicycle, Helicopter, Ship, Rocket',
+          defaultRight: 'Car, Bus, Airplane, Train, Bicycle, Helicopter, Ship, Rocket',
+          hint: '🚗 Built-in colorful vehicles with cute HD vector graphics included — or upload your own photos!'
         }
       };
 
@@ -1126,7 +1144,21 @@
         scissors: '✂️', glasses: '👓', sunglasses: '🕶️', phone: '📱', smartphone: '📱',
         key: '🔑', bottle: '🍾', 'water bottle': '🧴', toothbrush: '🪥', chair: '🪑',
         bed: '🛏️', spoon: '🥄', fork: '🍴', shoe: '👞', shoes: '👟', hat: '🧢', cap: '🧢',
-        lamp: '🛋️', mirror: '🪞', bell: '🔔', candle: '🕯️'
+        lamp: '🛋️', mirror: '🪞', bell: '🔔', candle: '🕯️',
+        // Vehicles & Transport
+        car: '🚗', automobile: '🚗', taxi: '🚕', cab: '🚕',
+        bus: '🚌', 'school bus': '🚌',
+        airplane: '✈️', plane: '✈️', aeroplane: '✈️',
+        train: '🚆', locomotive: '🚂',
+        bicycle: '🚲', bike: '🚲', cycle: '🚲',
+        helicopter: '🚁', chopper: '🚁',
+        ship: '🚢', boat: '⛵', sailboat: '⛵', yacht: '🛥️',
+        rocket: '🚀', spaceship: '🛸',
+        truck: '🚚', lorry: '🚛',
+        motorcycle: '🏍️', motorbike: '🏍️', scooter: '🛵',
+        'fire truck': '🚒', 'fire engine': '🚒',
+        'police car': '🚓', ambulance: '🚑', tractor: '🚜',
+        submarine: '🤿', skateboard: '🛹'
       };
 
       /* ==========================================================================
@@ -3257,6 +3289,435 @@
         return true;
       }
 
+      /* Built-in HD Vector Vehicles Renderer (Car, Bus, Airplane, Train, Bicycle, Helicopter, Ship, Rocket, etc.) */
+      function drawVectorVehicle(c, name, x, y, w, h) {
+        if (!name) return false;
+        const n = name.trim().toLowerCase();
+
+        c.save();
+        const cx = x + w / 2;
+        const cy = y + h / 2;
+        const maxW = w * 0.85;
+        const maxH = h * 0.78;
+        const s = Math.min(maxW / 520, maxH / 320);
+        c.translate(cx, cy);
+        c.scale(s, s);
+
+        function drawSparkles() {
+          const sparkles = [
+            { dx: -190, dy: -90, r: 14 },
+            { dx: -220, dy: 70, r: 9 },
+            { dx: 190, dy: -85, r: 13 },
+            { dx: 210, dy: 65, r: 10 }
+          ];
+          c.save();
+          sparkles.forEach(sp => {
+            c.save();
+            c.translate(sp.dx, sp.dy);
+            c.fillStyle = '#facc15';
+            c.beginPath();
+            for (let i = 0; i < 8; i++) {
+              const a = (i * Math.PI) / 4;
+              const r2 = i % 2 === 0 ? sp.r : sp.r * 0.35;
+              if (i === 0) c.moveTo(Math.cos(a) * r2, Math.sin(a) * r2);
+              else c.lineTo(Math.cos(a) * r2, Math.sin(a) * r2);
+            }
+            c.closePath();
+            c.fill();
+            c.restore();
+          });
+          c.restore();
+        }
+
+        function drawWheel(wx, wy, r) {
+          c.save();
+          c.beginPath();
+          c.arc(wx, wy, r, 0, Math.PI * 2);
+          c.fillStyle = '#0f172a'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#334155'; c.stroke();
+
+          c.beginPath();
+          c.arc(wx, wy, r * 0.52, 0, Math.PI * 2);
+          c.fillStyle = '#cbd5e1'; c.fill();
+          c.lineWidth = 3; c.strokeStyle = '#64748b'; c.stroke();
+
+          c.beginPath();
+          c.arc(wx, wy, r * 0.22, 0, Math.PI * 2);
+          c.fillStyle = '#0f172a'; c.fill();
+          c.restore();
+        }
+
+        function drawEye(ex, ey, r, lookLeft = false) {
+          c.save();
+          c.beginPath();
+          c.arc(ex, ey, r, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.lineWidth = Math.max(2, r * 0.12);
+          c.strokeStyle = '#0f172a';
+          c.stroke();
+          const pupilR = r * 0.58;
+          const px = lookLeft ? ex - r * 0.15 : ex + r * 0.15;
+          const py = ey - r * 0.05;
+          c.beginPath();
+          c.arc(px, py, pupilR, 0, Math.PI * 2);
+          c.fillStyle = '#0f172a';
+          c.fill();
+          c.beginPath();
+          c.arc(px - pupilR * 0.35, py - pupilR * 0.35, pupilR * 0.45, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.beginPath();
+          c.arc(px + pupilR * 0.35, py + pupilR * 0.35, pupilR * 0.22, 0, Math.PI * 2);
+          c.fillStyle = '#ffffff';
+          c.fill();
+          c.restore();
+        }
+
+        drawSparkles();
+
+        if (n.includes('car') || n.includes('auto') || n.includes('taxi')) {
+          // Car
+          const isTaxi = n.includes('taxi');
+          const mainCol = isTaxi ? '#facc15' : '#ef4444';
+          const darkCol = isTaxi ? '#ca8a04' : '#b91c1c';
+
+          drawWheel(-85, 75, 42);
+          drawWheel(85, 75, 42);
+
+          c.beginPath();
+          c.moveTo(-165, 65);
+          c.lineTo(-160, 10);
+          c.quadraticCurveTo(-155, -20, -110, -25);
+          c.lineTo(-75, -25);
+          c.quadraticCurveTo(-50, -85, 10, -85);
+          c.lineTo(65, -85);
+          c.quadraticCurveTo(115, -85, 135, -20);
+          c.lineTo(160, -10);
+          c.quadraticCurveTo(170, 20, 165, 65);
+          c.closePath();
+          c.fillStyle = mainCol; c.fill();
+          c.lineWidth = 7; c.strokeStyle = darkCol; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-60, -20);
+          c.lineTo(-40, -72);
+          c.lineTo(10, -72);
+          c.lineTo(10, -20);
+          c.closePath();
+          c.fillStyle = '#38bdf8'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#0284c7'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(22, -20);
+          c.lineTo(22, -72);
+          c.lineTo(60, -72);
+          c.quadraticCurveTo(95, -72, 115, -20);
+          c.closePath();
+          c.fillStyle = '#38bdf8'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#0284c7'; c.stroke();
+
+          c.beginPath();
+          c.arc(155, 15, 14, 0, Math.PI * 2);
+          c.fillStyle = '#fef08a'; c.fill();
+          c.lineWidth = 3; c.strokeStyle = '#ca8a04'; c.stroke();
+
+          drawEye(-15, -45, 12, false);
+          drawEye(45, -45, 12, false);
+          c.beginPath();
+          c.arc(15, 20, 14, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = darkCol; c.stroke();
+
+        } else if (n.includes('bus')) {
+          // Bus
+          drawWheel(-85, 80, 40);
+          drawWheel(85, 80, 40);
+
+          c.beginPath();
+          roundRectPath(c, -165, -85, 330, 160, 28);
+          c.fillStyle = '#facc15'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#ca8a04'; c.stroke();
+
+          c.beginPath();
+          c.rect(-165, 22, 330, 20);
+          c.fillStyle = '#0f172a'; c.fill();
+
+          [-125, -65, -5, 55, 115].forEach(wx => {
+            c.beginPath();
+            roundRectPath(c, wx, -65, 48, 52, 10);
+            c.fillStyle = '#38bdf8'; c.fill();
+            c.lineWidth = 4; c.strokeStyle = '#0284c7'; c.stroke();
+          });
+
+          drawEye(-35, -35, 12, false);
+          drawEye(25, -35, 12, false);
+          c.beginPath();
+          c.arc(0, -10, 10, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#ca8a04'; c.stroke();
+
+        } else if (n.includes('plane') || n.includes('airplane') || n.includes('aeroplane')) {
+          // Airplane
+          c.beginPath();
+          c.moveTo(-150, -25);
+          c.lineTo(-195, -115);
+          c.lineTo(-145, -115);
+          c.lineTo(-105, -25);
+          c.closePath();
+          c.fillStyle = '#2563eb'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#1d4ed8'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(10, 0, 185, 46, 0, 0, Math.PI * 2);
+          c.fillStyle = '#f8fafc'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#cbd5e1'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-10, 10);
+          c.lineTo(-65, 115);
+          c.lineTo(-20, 115);
+          c.lineTo(65, 10);
+          c.closePath();
+          c.fillStyle = '#3b82f6'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#1d4ed8'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(10, -10);
+          c.lineTo(-35, -95);
+          c.lineTo(5, -95);
+          c.lineTo(75, -10);
+          c.closePath();
+          c.fillStyle = '#2563eb'; c.fill();
+
+          c.beginPath();
+          roundRectPath(c, 110, -22, 55, 32, 10);
+          c.fillStyle = '#38bdf8'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#0284c7'; c.stroke();
+
+          drawEye(125, -8, 10, false);
+          drawEye(145, -8, 10, false);
+
+        } else if (n.includes('train') || n.includes('locomotive')) {
+          // Train
+          drawWheel(-105, 75, 42);
+          drawWheel(-15, 75, 42);
+          drawWheel(75, 75, 42);
+
+          c.beginPath();
+          c.arc(70, -125, 24, 0, Math.PI * 2);
+          c.arc(105, -150, 32, 0, Math.PI * 2);
+          c.arc(150, -170, 38, 0, Math.PI * 2);
+          c.fillStyle = 'rgba(226, 232, 240, 0.75)'; c.fill();
+
+          c.beginPath();
+          roundRectPath(c, -150, -85, 95, 155, 16);
+          c.fillStyle = '#3b82f6'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#1d4ed8'; c.stroke();
+
+          c.beginPath();
+          roundRectPath(c, -55, -45, 185, 115, 20);
+          c.fillStyle = '#ef4444'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#b91c1c'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(55, -45); c.lineTo(50, -95); c.lineTo(90, -95); c.lineTo(85, -45);
+          c.closePath();
+          c.fillStyle = '#1e293b'; c.fill();
+
+          c.beginPath();
+          c.moveTo(130, 70); c.lineTo(170, 70); c.lineTo(130, 20);
+          c.closePath();
+          c.fillStyle = '#475569'; c.fill();
+
+          drawEye(5, -5, 13, false);
+          drawEye(55, -5, 13, false);
+          c.beginPath();
+          c.arc(30, 22, 12, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#7f1d1d'; c.stroke();
+
+        } else if (n.includes('bicycle') || n.includes('bike') || n.includes('cycle')) {
+          // Bicycle
+          drawWheel(-100, 50, 48);
+          drawWheel(100, 50, 48);
+
+          c.beginPath();
+          c.moveTo(-100, 50);
+          c.lineTo(-20, 50);
+          c.lineTo(35, -20);
+          c.lineTo(-65, -20);
+          c.lineTo(-100, 50);
+          c.moveTo(-20, 50);
+          c.lineTo(-40, -45);
+          c.moveTo(35, -20);
+          c.lineTo(75, -55);
+          c.lineTo(100, 50);
+          c.lineWidth = 9; c.strokeStyle = '#ef4444'; c.lineCap = 'round'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-60, -45); c.lineTo(-20, -45);
+          c.moveTo(60, -58); c.lineTo(90, -58);
+          c.lineWidth = 12; c.strokeStyle = '#0f172a'; c.lineCap = 'round'; c.stroke();
+
+          drawEye(-10, -5, 12, false);
+          c.beginPath();
+          c.arc(0, 16, 10, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#991b1b'; c.stroke();
+
+        } else if (n.includes('helicopter') || n.includes('chopper')) {
+          // Helicopter
+          c.beginPath();
+          c.moveTo(-170, -115); c.lineTo(170, -115);
+          c.lineWidth = 12; c.strokeStyle = '#334155'; c.lineCap = 'round'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(0, -65); c.lineTo(0, -115);
+          c.lineWidth = 12; c.strokeStyle = '#64748b'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-110, 95); c.lineTo(110, 95); c.lineTo(135, 80);
+          c.lineWidth = 10; c.strokeStyle = '#475569'; c.lineCap = 'round'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-50, 55); c.lineTo(-50, 95);
+          c.moveTo(50, 55); c.lineTo(50, 95);
+          c.lineWidth = 8; c.strokeStyle = '#475569'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-75, 0); c.lineTo(-175, -20);
+          c.lineWidth = 18; c.strokeStyle = '#1d4ed8'; c.stroke();
+
+          c.beginPath();
+          c.ellipse(10, 0, 115, 65, 0, 0, Math.PI * 2);
+          c.fillStyle = '#3b82f6'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#1d4ed8'; c.stroke();
+
+          c.beginPath();
+          c.arc(45, 0, 48, -Math.PI * 0.45, Math.PI * 0.45);
+          c.fillStyle = '#38bdf8'; c.fill();
+
+          drawEye(35, -5, 12, false);
+          drawEye(75, -5, 12, false);
+
+        } else if (n.includes('ship') || n.includes('boat')) {
+          // Ship / Boat
+          c.beginPath();
+          c.moveTo(-185, 75);
+          c.quadraticCurveTo(-125, 45, -65, 75);
+          c.quadraticCurveTo(0, 45, 65, 75);
+          c.quadraticCurveTo(125, 45, 185, 75);
+          c.lineWidth = 14; c.strokeStyle = '#38bdf8'; c.lineCap = 'round'; c.stroke();
+
+          c.beginPath();
+          c.arc(-40, -115, 18, 0, Math.PI * 2);
+          c.arc(-65, -135, 24, 0, Math.PI * 2);
+          c.fillStyle = 'rgba(226, 232, 240, 0.75)'; c.fill();
+
+          c.beginPath();
+          c.rect(-50, -95, 30, 45);
+          c.fillStyle = '#ef4444'; c.fill();
+          c.lineWidth = 4; c.strokeStyle = '#b91c1c'; c.stroke();
+
+          c.beginPath();
+          roundRectPath(c, -85, -50, 140, 60, 12);
+          c.fillStyle = '#f8fafc'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#cbd5e1'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-155, 10);
+          c.lineTo(125, 10);
+          c.lineTo(165, -15);
+          c.lineTo(110, 65);
+          c.lineTo(-120, 65);
+          c.closePath();
+          c.fillStyle = '#0284c7'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#0369a1'; c.stroke();
+
+          drawEye(-20, -22, 12, false);
+          drawEye(20, -22, 12, false);
+          c.beginPath();
+          c.arc(0, 32, 12, 0.2, Math.PI - 0.2);
+          c.lineWidth = 3; c.strokeStyle = '#0369a1'; c.stroke();
+
+        } else if (n.includes('rocket') || n.includes('spaceship')) {
+          // Rocket
+          c.save();
+          c.rotate(-0.4);
+
+          c.beginPath();
+          c.moveTo(-35, 60);
+          c.quadraticCurveTo(-60, 115, 0, 165);
+          c.quadraticCurveTo(60, 115, 35, 60);
+          c.closePath();
+          c.fillStyle = '#f97316'; c.fill();
+
+          c.beginPath();
+          c.moveTo(-18, 60);
+          c.quadraticCurveTo(-30, 100, 0, 135);
+          c.quadraticCurveTo(30, 100, 18, 60);
+          c.closePath();
+          c.fillStyle = '#fde047'; c.fill();
+
+          c.beginPath();
+          c.moveTo(-50, 50); c.lineTo(-95, 65); c.lineTo(-50, 0);
+          c.moveTo(50, 50); c.lineTo(95, 65); c.lineTo(50, 0);
+          c.fillStyle = '#ef4444'; c.fill();
+          c.lineWidth = 5; c.strokeStyle = '#b91c1c'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-50, 60);
+          c.quadraticCurveTo(-55, -45, 0, -145);
+          c.quadraticCurveTo(55, -45, 50, 60);
+          c.closePath();
+          c.fillStyle = '#f8fafc'; c.fill();
+          c.lineWidth = 7; c.strokeStyle = '#cbd5e1'; c.stroke();
+
+          c.beginPath();
+          c.moveTo(-35, -75);
+          c.quadraticCurveTo(0, -125, 0, -145);
+          c.quadraticCurveTo(0, -125, 35, -75);
+          c.closePath();
+          c.fillStyle = '#ef4444'; c.fill();
+
+          c.beginPath();
+          c.arc(0, -20, 32, 0, Math.PI * 2);
+          c.fillStyle = '#38bdf8'; c.fill();
+          c.lineWidth = 6; c.strokeStyle = '#0284c7'; c.stroke();
+
+          drawEye(0, -20, 14, false);
+
+          c.restore();
+
+        } else {
+          // Procedural Vehicle
+          let hash = 0;
+          for (let i = 0; i < n.length; i++) hash = (hash * 31 + n.charCodeAt(i)) & 0xffffffff;
+          const colors = [
+            { main: '#2563eb', dark: '#1d4ed8' },
+            { main: '#ef4444', dark: '#b91c1c' },
+            { main: '#10b981', dark: '#047857' },
+            { main: '#f97316', dark: '#c2410c' },
+            { main: '#8b5cf6', dark: '#6d28d9' }
+          ];
+          const col = colors[Math.abs(hash) % colors.length];
+
+          drawWheel(-85, 75, 42);
+          drawWheel(85, 75, 42);
+
+          c.beginPath();
+          roundRectPath(c, -155, -45, 310, 115, 24);
+          c.fillStyle = col.main; c.fill();
+          c.lineWidth = 7; c.strokeStyle = col.dark; c.stroke();
+
+          drawEye(-35, -10, 16, false);
+          drawEye(35, -10, 16, false);
+          c.beginPath();
+          c.arc(0, 20, 14, 0.2, Math.PI - 0.2);
+          c.lineWidth = 4; c.strokeStyle = col.dark; c.stroke();
+        }
+
+        c.restore();
+        return true;
+      }
+
       /* ==========================================================================
          4. DOM REFERENCES
          ========================================================================== */
@@ -4642,6 +5103,10 @@
 
         if (cat === 'everyday') {
           if (drawVectorEveryday(c, pair.left, boxX, boxY, boxW, boxH)) return;
+        }
+
+        if (cat === 'vehicles') {
+          if (drawVectorVehicle(c, pair.left, boxX, boxY, boxW, boxH)) return;
         }
 
         const emoji = ITEM_EMOJIS[pair.left.trim().toLowerCase()];
